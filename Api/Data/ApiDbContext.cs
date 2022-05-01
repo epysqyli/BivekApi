@@ -11,6 +11,7 @@ namespace Api.Data
         public DbSet<WorkingPaper> WorkingPapers { get; set; }
         public DbSet<DataCategory> DataCategories { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<ArticleTag> ArticleTags { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options)
         { }
