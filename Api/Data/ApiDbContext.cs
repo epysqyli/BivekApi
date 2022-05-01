@@ -58,14 +58,16 @@ namespace Api.Data
 
             builder.Entity<ArticleTag>()
                 .HasKey(at => new { at.ArticleId, at.TagId });
+
             builder.Entity<ArticleTag>()
                 .HasOne(at => at.Tag)
                 .WithMany(at => at.ArticleTags)
-                .HasForeignKey(at => at.ArticleId);
+                .HasForeignKey(at => at.TagId);
+            
             builder.Entity<ArticleTag>()
                 .HasOne(at => at.Article)
                 .WithMany(at => at.ArticleTags)
-                .HasForeignKey(at => at.TagId);
+                .HasForeignKey(at => at.ArticleId);
         }
     }
 }
