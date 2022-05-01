@@ -22,5 +22,10 @@ namespace Api.Models
             context.Comments.Add(comment);
             context.SaveChanges();
         }
+
+        public override string ToString()
+        {
+            return $"Title: {this.Title}\nBody: {this.Body}\n";
+        }
     }
 }
