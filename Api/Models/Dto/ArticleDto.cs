@@ -24,6 +24,7 @@ namespace Api.Models
             assignTitle();
             assignBody();
             Tags = await assignTags();
+            Comments = await assignComments();
         }
 
         public int Id { get; set; }
@@ -31,6 +32,7 @@ namespace Api.Models
         public string Body { get; set; }
 
         public List<string> Tags { get; set; }
+        public List<CommentDto> Comments { get; set; }
 
         private Article _article;
 
@@ -54,6 +56,17 @@ namespace Api.Models
             return await Task.Run(() => _context.ArticleTags.Where(at => at.ArticleId == Id)
                                        .Select(at => at.Tag)
                                        .Select(t => t.Name).ToList());
+        }
+
+        private async Task<List<CommentDto>> assignComments()
+        {
+            return await Task.Run(() => _context.Comments.Where(c => c.Article == _article)
+                                                         .Select(c => new CommentDto()
+                                                         {
+                                                             Author = c.Author,
+                                                             Content = c.Content,
+                                                         })
+                                                         .ToList());
         }
     }
 }
