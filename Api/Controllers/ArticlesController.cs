@@ -25,7 +25,11 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArticles()
         {
-            List<Article> articles = await _context.Articles.Include(a => a.Comments).ToListAsync();
+            List<int> ids = await _context.Articles.Select(a => a.Id).ToListAsync();
+            List<ArticleDto> articles = new List<ArticleDto>();
+            foreach (int id in ids)
+                articles.Add(await ArticleDto.Create(id, _context));
+            
             return Ok(articles);
         }
 

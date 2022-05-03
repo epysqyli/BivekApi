@@ -1,4 +1,5 @@
 using Api.Data;
+using Api.Models;
 using Api.Configuration;
 
 using System.Text;
@@ -39,8 +40,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApiDbContext>();
 
-builder.Services.AddControllers()
-                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -62,9 +62,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var _context = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var _context = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
+// }
 
 app.Run();
