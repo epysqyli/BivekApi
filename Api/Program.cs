@@ -62,4 +62,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var _context = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
+}
+
 app.Run();
