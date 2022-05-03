@@ -32,10 +32,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetArticle(int id)
         {
-            Article article = await _context.Articles.Where(a => a.Id == id)
-                                                     .Include(a => a.Comments)
-                                                     .FirstOrDefaultAsync();
-
+            ArticleDto article = await ArticleDto.Create(id, _context);
             return (article == null) ? NotFound() : Ok(article);
         }
 
