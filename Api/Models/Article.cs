@@ -24,10 +24,9 @@ namespace Api.Models
             context.SaveChanges();
         }
 
-        public async Task PatchArticle(int articleId, JsonPatchDocument articlePatch, ApiDbContext context)
+        public void PatchArticle(JsonPatchDocument articlePatch)
         {
             articlePatch.ApplyTo(this);
-            await context.SaveChangesAsync();
         }
 
         public override string ToString()

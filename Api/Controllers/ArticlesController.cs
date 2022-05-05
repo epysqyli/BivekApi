@@ -8,7 +8,7 @@ using Api.Models;
 
 namespace Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
     [ApiController]
     public class ArticlesController : ControllerBase
@@ -55,7 +55,8 @@ namespace Api.Controllers
         public async Task<IActionResult> UpdateArticle(int id, JsonPatchDocument articlePatch)
         {
             Article article = await _context.Articles.FindAsync(id);
-            await article.PatchArticle(id, articlePatch, _context);
+            article.PatchArticle(articlePatch);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("CreateArticle", new { article.Id }, article);
         }
