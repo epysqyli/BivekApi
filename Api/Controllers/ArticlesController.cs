@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using Api.Data;
 using Api.Models;
 
 namespace Api.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
     [ApiController]
     public class ArticlesController : ControllerBase
@@ -29,7 +26,7 @@ namespace Api.Controllers
             List<ArticleDto> articles = new List<ArticleDto>();
             foreach (int id in ids)
                 articles.Add(await ArticleDto.Create(id, _context));
-            
+
             return Ok(articles);
         }
 
@@ -54,21 +51,13 @@ namespace Api.Controllers
             return new JsonResult("Something went wrong") { StatusCode = 500 };
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateArticle(int id, Article article)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateArticle(int id, JsonPatchDocument articlePatch)
         {
-            if (id != article.Id)
-                return BadRequest();
+            Article article = await _context.Articles.FindAsync(id);
+            await article.PatchArticle(id, articlePatch, _context);
 
-            Article existingArticle = await _context.Articles.FindAsync(id);
-            if (existingArticle == null)
-                return NotFound();
-
-            existingArticle.Title = article.Title;
-            existingArticle.Body = article.Body;
-
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("UpdateArticle", new { existingArticle.Id }, existingArticle);
+            return CreatedAtAction("CreateArticle", new { article.Id }, article);
         }
 
         [HttpDelete("{id}")]
