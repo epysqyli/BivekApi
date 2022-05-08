@@ -1,4 +1,5 @@
 using Api.Data;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Api.Models
 {
@@ -11,19 +12,29 @@ namespace Api.Models
             _context = context;
         }
 
-        public IEnumerable<Article> GetArticles()
+        public async Task<IEnumerable<ArticleDto>> GetArticleDtos()
         {
-            return _context.Articles.ToList<Article>();
+            IEnumerable<int> ids = _context.Articles.Select(a => a.Id).ToList();
+            List<ArticleDto> articles = new List<ArticleDto>();
+            foreach (int id in ids)
+                articles.Add(await ArticleDto.Create(id, _context));
+
+            return articles;
         }
 
-        public Article GetArticleById(int articleId)
+        public async Task<Article> GetArticleById(int articleId)
         {
-            return _context.Articles.Find(articleId);
+            return await _context.Articles.FindAsync(articleId);
         }
 
-        public void InsertArticle(Article article)
+        public async Task<ArticleDto> GetArticleDtoById(int articleId)
         {
-            _context.Articles.Add(article);
+            return await ArticleDto.Create(articleId, _context);
+        }
+
+        public async Task InsertArticle(Article article)
+        {
+            await _context.Articles.AddAsync(article);
         }
 
         public void UpdateArticle(Article article)
@@ -31,15 +42,20 @@ namespace Api.Models
             _context.Articles.Update(article);
         }
 
-        public void DeleteArticle(int articleId)
+        public void PartialUpdateArticle(Article article, JsonPatchDocument articlePatch)
         {
-            Article article = _context.Articles.Find(articleId);
+            articlePatch.ApplyTo(article);
+        }
+
+        public async Task DeleteArticle(int articleId)
+        {
+            Article article = await _context.Articles.FindAsync(articleId);
             _context.Articles.Remove(article);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

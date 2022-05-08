@@ -1,12 +1,16 @@
+using Microsoft.AspNetCore.JsonPatch;
+
 namespace Api.Models
 {
     public interface IArticleRepository
     {
-        IEnumerable<Article> GetArticles();
-        Article GetArticleById(int articleId);
-        void InsertArticle(Article article);
+        Task<IEnumerable<ArticleDto>> GetArticleDtos();
+        Task<Article> GetArticleById(int articleId);
+        Task<ArticleDto> GetArticleDtoById(int articleId);
+        Task InsertArticle(Article article);
         void UpdateArticle(Article article);
-        void DeleteArticle(int articleId);
-        void Save();
+        void PartialUpdateArticle(Article article, JsonPatchDocument articlePatch);
+        Task DeleteArticle(int articleId);
+        Task Save();
     }
 }
