@@ -55,6 +55,9 @@ namespace Api.Controllers
         public async Task<IActionResult> UpdateArticle(int id, JsonPatchDocument articlePatch)
         {
             Article article = await _context.Articles.FindAsync(id);
+            if (article == null)
+                return NotFound();
+
             article.PatchArticle(articlePatch);
             await _context.SaveChangesAsync();
 

@@ -22,22 +22,28 @@ namespace Api.Models
         public static async Task<ArticleDto> Create(int ArticleId, ApiDbContext context)
         {
             ArticleDto articleDto = new ArticleDto(ArticleId, context);
-            await articleDto.Initialize();
-            return articleDto;
+            Article article = await articleDto.getArticle();
+            if (article != null)
+            {
+                articleDto._article = article;
+                await articleDto.Initialize();
+                return articleDto;
+            }
+            
+            return null;
         }
 
         private async Task Initialize()
         {
-            await assignArticle();
             assignTitle();
             assignBody();
             Tags = await assignTags();
             Comments = await assignComments();
         }
 
-        private async Task assignArticle()
+        private async Task<Article> getArticle()
         {
-            _article = await _context.Articles.FindAsync(Id);
+            return await _context.Articles.FindAsync(Id);
         }
 
         private void assignTitle()
