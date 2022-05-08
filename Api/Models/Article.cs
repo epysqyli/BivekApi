@@ -1,5 +1,4 @@
 using Api.Data;
-using Microsoft.AspNetCore.JsonPatch;
 using System.ComponentModel.DataAnnotations;
 namespace Api.Models
 {
@@ -22,11 +21,6 @@ namespace Api.Models
             comment.Article = this;
             context.Comments.Add(comment);
             context.SaveChanges();
-        }
-
-        public void PatchArticle(JsonPatchDocument articlePatch)
-        {
-            articlePatch.ApplyTo(this);
         }
 
         public override string ToString()

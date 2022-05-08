@@ -48,7 +48,7 @@ namespace Api.Controllers
                 return CreatedAtAction("CreateArticle", new { article.Id }, article);
             }
 
-            return new JsonResult("Something went wrong") { StatusCode = 500 };
+            return BadRequest("Something went wrong");
         }
 
         [HttpPatch("{id}")]
@@ -58,10 +58,10 @@ namespace Api.Controllers
             if (article == null)
                 return NotFound();
 
-            article.PatchArticle(articlePatch);
-            await _context.SaveChangesAsync();
+            articlePatch.ApplyTo(article);
 
-            return CreatedAtAction("CreateArticle", new { article.Id }, article);
+            ArticleDto updatedArticle = await ArticleDto.Create(id, _context);
+            return CreatedAtAction("UpdateArticle", new { article.Id }, updatedArticle);
         }
 
         [HttpDelete("{id}")]
