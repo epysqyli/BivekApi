@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace Api.Models
 {
-    public class ArticleRepo : IArticleRepository
+    public class ArticleRepo
     {
         private ApiDbContext _context;
 

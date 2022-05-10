@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
-using Api.Data;
 using Api.Models;
 
 namespace Api.Controllers
@@ -12,33 +11,33 @@ namespace Api.Controllers
     [ApiController]
     public class ArticlesController : ControllerBase
     {
-        private IArticleRepository _articleRepo;
-        public ArticlesController(ApiDbContext context)
+        private IUnitOfWork _unitOfWork;
+        public ArticlesController(IUnitOfWork unitOfWork)
         {
-            _articleRepo = new ArticleRepo(context);
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetArticles()
+        public IActionResult GetArticles()
         {
-            IEnumerable<ArticleDto> articles = await _articleRepo.GetArticleDtos();
+            IEnumerable<Article> articles = _unitOfWork.Articles.GetAll();
             return Ok(articles);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetArticle(int id)
+        public IActionResult GetArticle(int id)
         {
-            ArticleDto article = await _articleRepo.GetArticleDtoById(id);
+            Article article = _unitOfWork.Articles.GetById(id);
             return (article == null) ? NotFound() : Ok(article);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateArticle(Article article)
+        public IActionResult CreateArticle(Article article)
         {
             if (ModelState.IsValid)
             {
-                await _articleRepo.InsertArticle(article);
-                await _articleRepo.Save();
+                _unitOfWork.Articles.Add(article);
+                _unitOfWork.Complete();
                 return CreatedAtAction("CreateArticle", new { article.Id }, article);
             }
 
@@ -46,26 +45,28 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateArticle(int id, JsonPatchDocument articlePatch)
+        public IActionResult UpdateArticle(int id, JsonPatchDocument<Article> articlePatch)
         {
-            Article article = await _articleRepo.GetArticleById(id);
+            Article article = _unitOfWork.Articles.GetById(id);
             if (article == null)
                 return NotFound();
 
-            _articleRepo.PartialUpdateArticle(article, articlePatch);
-            ArticleDto updatedArticle = await _articleRepo.GetArticleDtoById(id);
+            _unitOfWork.Articles.Patch(article, articlePatch);
+            Article updatedArticle = _unitOfWork.Articles.GetById(id);
+            _unitOfWork.Complete();
+
             return CreatedAtAction("UpdateArticle", new { article.Id }, article);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteArticle(int id)
+        public IActionResult DeleteArticle(int id)
         {
-            Article existingArticle = await _articleRepo.GetArticleById(id);
+            Article existingArticle = _unitOfWork.Articles.GetById(id);
             if (existingArticle == null)
                 return NotFound();
 
-            await _articleRepo.DeleteArticle(id);
-            await _articleRepo.Save();
+            _unitOfWork.Articles.Remove(existingArticle);
+            _unitOfWork.Complete();
 
             return Ok(existingArticle);
         }

@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // database connection
 string ConnString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(ConnString));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // jwt configuration
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
