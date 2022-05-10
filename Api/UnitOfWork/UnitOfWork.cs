@@ -1,4 +1,5 @@
 using Api.Data;
+using Api.Interfaces;
 
 namespace Api.Models
 {

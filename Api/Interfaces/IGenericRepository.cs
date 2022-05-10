@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.JsonPatch;
 
-namespace Api.Models
+namespace Api.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
