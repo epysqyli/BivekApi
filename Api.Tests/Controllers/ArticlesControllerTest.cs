@@ -12,14 +12,14 @@ namespace Api.UnitTests.Controllers
     public class ArticlesControllerTest
     {
         [Fact]
-        public void GetArticle_Returns_HttpNotFound_GivenNotexistentArticle()
+        public void GetArticle_Returns_NotFound_GivenNoArticle()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-            int fakeArticleId = 123;
-            mockIUnitOfWork.Setup(unit => unit.Articles.GetById(fakeArticleId)).Returns<Article>(null);
+            int someArticleId = 1;
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetById(someArticleId)).Returns<Article>(null);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
-            IActionResult res = articlesController.GetArticle(fakeArticleId);
+            IActionResult res = articlesController.GetArticle(someArticleId);
 
             Assert.IsType<NotFoundResult>(res);
         }
