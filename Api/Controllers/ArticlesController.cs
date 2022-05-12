@@ -69,7 +69,7 @@ namespace Api.Controllers
             _unitOfWork.Articles.Remove(existingArticle);
             _unitOfWork.Complete();
 
-            return Ok(existingArticle);
+            return NoContent();
         }
     }
 }
