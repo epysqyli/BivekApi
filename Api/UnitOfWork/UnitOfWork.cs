@@ -7,10 +7,14 @@ namespace Api.Models
     {
         private readonly ApiDbContext _context;
         public IArticleRepository Articles { get; private set; }
+        public ICommentRepository Comments { get; private set; }
+        public IArticleTagRepository ArticleTags { get; private set; }
         public UnitOfWork(ApiDbContext context)
         {
             _context = context;
             Articles = new ArticleRepository(_context);
+            Comments = new CommentRepository(_context);
+            ArticleTags = new ArticleTagRepository(_context);
         }
 
         public int Complete()

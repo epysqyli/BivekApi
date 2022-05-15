@@ -1,10 +1,11 @@
 using Api.Data;
+using Api.Interfaces;
 
 namespace Api.Models
 {
     public class ArticleDto
     {
-        private ApiDbContext _context;
+        private  IUnitOfWork _unitOfWork;
         private Article _article;
         public int Id { get; set; }
         public string Title { get; set; }
@@ -13,15 +14,15 @@ namespace Api.Models
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-        private ArticleDto(int ArticleId, ApiDbContext context)
+        private ArticleDto(int ArticleId, IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             Id = ArticleId;
         }
 
-        public static async Task<ArticleDto> Create(int ArticleId, ApiDbContext context)
+        public static async Task<ArticleDto> Create(int ArticleId, IUnitOfWork unitOfWork)
         {
-            ArticleDto articleDto = new ArticleDto(ArticleId, context);
+            ArticleDto articleDto = new ArticleDto(ArticleId, unitOfWork);
             Article article = await articleDto.getArticle();
             if (article != null)
             {
@@ -43,7 +44,7 @@ namespace Api.Models
 
         private async Task<Article> getArticle()
         {
-            return await _context.Articles.FindAsync(Id);
+            return _unitOfWork.Articles.GetById(Id);
         }
 
         private void assignTitle()
@@ -58,14 +59,14 @@ namespace Api.Models
 
         private async Task<List<TagDto>> assignTags()
         {
-            return await Task.Run(() => _context.ArticleTags.Where(at => at.ArticleId == Id)
+            return await Task.Run(() => _unitOfWork.ArticleTags.Find(at => at.ArticleId == Id)
                                        .Select(at => at.Tag)
                                        .Select(t => new TagDto() { Id = t.Id, Name = t.Name }).ToList());
         }
 
         private async Task<List<CommentDto>> assignComments()
         {
-            return await Task.Run(() => _context.Comments.Where(c => c.Article == _article)
+            return await Task.Run(() => _unitOfWork.Comments.Find(c => c.Article == _article)
                                                          .Select(c => new CommentDto()
                                                          {
                                                              Id = c.Id,
