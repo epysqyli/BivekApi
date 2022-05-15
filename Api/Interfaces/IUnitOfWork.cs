@@ -6,5 +6,6 @@ namespace Api.Interfaces
         ICommentRepository Comments { get; }
         IArticleTagRepository ArticleTags { get; }
         int Complete();
+        Task<int> CompleteAsync();
     }
 }

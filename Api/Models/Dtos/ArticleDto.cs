@@ -44,7 +44,7 @@ namespace Api.Models
 
         private async Task<Article> getArticle()
         {
-            return _unitOfWork.Articles.GetById(Id);
+            return await _unitOfWork.Articles.GetByIdAsync(Id);
         }
 
         private void assignTitle()
