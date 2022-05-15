@@ -13,19 +13,14 @@ namespace Api.Models
             _context = context;
         }
 
-        public void Add(T entity)
+        public T GetById(int id)
         {
-            _context.Set<T>().Add(entity);
+            return _context.Set<T>().Find(id);
         }
 
-        public void AddRange(IEnumerable<T> entities)
+        public async Task<T> GetByIdAsync(int id)
         {
-            _context.Set<T>().AddRange(entities);
-        }
-
-        public IQueryable<T> Find(Expression<Func<T, bool>> expression)
-        {
-            return _context.Set<T>().Where(expression);
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public IEnumerable<T> GetAll()
@@ -33,9 +28,29 @@ namespace Api.Models
             return _context.Set<T>().ToList();
         }
 
-        public T GetById(int id)
+        public IQueryable<T> Find(Expression<Func<T, bool>> expression)
         {
-            return _context.Set<T>().Find(id);
+            return _context.Set<T>().Where(expression);
+        }
+
+        public void Add(T entity)
+        {
+            _context.Set<T>().Add(entity);
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+        }
+
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().AddRange(entities);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _context.Set<T>().AddRangeAsync(entities);
         }
 
         public void Remove(T entity)
@@ -47,7 +62,7 @@ namespace Api.Models
         {
             _context.Set<T>().RemoveRange(entities);
         }
-        
+
         public void Patch(T entity, JsonPatchDocument<T> patch)
         {
             patch.ApplyTo(entity);
