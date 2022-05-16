@@ -19,26 +19,34 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetArticles()
+        public async Task<IActionResult> GetArticles()
         {
-            IEnumerable<Article> articles = _unitOfWork.Articles.GetAll();
+            IEnumerable<int> articleIds = _unitOfWork.Articles.GetAll().Select(a => a.Id);
+            List<ArticleDto> articles = new List<ArticleDto>();
+            foreach (int id in articleIds)
+            {
+                ArticleDto article = await ArticleDto.Create(id, _unitOfWork);
+                articles.Add(article);
+            }
+
             return Ok(articles);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetArticle(int id)
+        public async Task<IActionResult> GetArticle(int id)
         {
-            Article article = _unitOfWork.Articles.GetById(id);
+            // Article article = _unitOfWork.Articles.GetById(id);
+            ArticleDto article = await ArticleDto.Create(id, _unitOfWork);
             return (article == null) ? NotFound() : Ok(article);
         }
 
         [HttpPost]
-        public IActionResult CreateArticle(Article article)
+        public async Task<IActionResult> CreateArticle(Article article)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Articles.Add(article);
-                _unitOfWork.Complete();
+                await _unitOfWork.Articles.AddAsync(article);
+                await _unitOfWork.CompleteAsync();
                 return CreatedAtAction("CreateArticle", new { article.Id }, article);
             }
 
@@ -60,14 +68,14 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteArticle(int id)
+        public async Task<IActionResult> DeleteArticle(int id)
         {
             Article existingArticle = _unitOfWork.Articles.GetById(id);
             if (existingArticle == null)
                 return NotFound();
 
             _unitOfWork.Articles.Remove(existingArticle);
-            _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
 
             return NoContent();
         }
