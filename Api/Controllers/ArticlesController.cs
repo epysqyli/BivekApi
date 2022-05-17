@@ -19,13 +19,13 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetArticles()
+        public IActionResult GetArticles()
         {
             IEnumerable<int> articleIds = _unitOfWork.Articles.GetAll().Select(a => a.Id);
-            List<ArticleDto> articles = new List<ArticleDto>();
+            List<IArticleDto> articles = new List<IArticleDto>();
             foreach (int id in articleIds)
             {
-                ArticleDto article = await ArticleDto.Create(id, _unitOfWork);
+                IArticleDto article = _unitOfWork.Articles.GetDto(id);
                 articles.Add(article);
             }
 
@@ -33,10 +33,9 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetArticle(int id)
+        public IActionResult GetArticle(int id)
         {
-            // Article article = _unitOfWork.Articles.GetById(id);
-            ArticleDto article = await ArticleDto.Create(id, _unitOfWork);
+            IArticleDto article = _unitOfWork.Articles.GetDto(id);
             return (article == null) ? NotFound() : Ok(article);
         }
 

@@ -13,31 +13,31 @@ namespace Api.UnitTests.Controllers
     public class ArticlesControllerTest
     {
         [Fact]
-        public async Task GetArticle_Returns_NotFound_GivenNoArticle()
+        public void GetArticle_Returns_NotFound_GivenNoArticle()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             int someArticleId = 1;
-            mockIUnitOfWork.Setup(unit => unit.Articles.GetById(someArticleId)).Returns<Article>(null);
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetById(someArticleId)).Returns<IArticleDto>(null);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
-            IActionResult res = await articlesController.GetArticle(someArticleId);
+            IActionResult res = articlesController.GetArticle(someArticleId);
 
             Assert.IsType<NotFoundResult>(res);
         }
 
-        // [Fact]
-        // public async Task GetArticle_Returns_OkObjectResult()
-        // {
-        //     Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-        //     Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
-        //     Moq.Mock<ArticleDto> mockArticleDto = new Mock<ArticleDto>();
-        //     mockIUnitOfWork.Setup(unit => unit.Articles.GetByIdAsync(article.Id)).Returns(Task.FromResult(mockArticleDto));
-        //     ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
+        [Fact]
+        public void GetArticle_Returns_OkObjectResult()
+        {
+            Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
+            Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
+            Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
+            ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
-        //     IActionResult res = await articlesController.GetArticle(article.Id);
+            IActionResult res = articlesController.GetArticle(article.Id);
 
-        //     Assert.IsType<OkObjectResult>(res);
-        // }
+            Assert.IsType<OkObjectResult>(res);
+        }
 
         [Fact]
         public async Task Create_ReturnsBadRequest_GivenInvalidModel()

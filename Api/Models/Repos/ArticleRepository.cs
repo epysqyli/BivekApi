@@ -7,5 +7,10 @@ namespace Api.Models
     {
         public ArticleRepository(ApiDbContext context) : base(context)
         { }
+
+        public IArticleDto GetDto(int id)
+        {
+            return new ArticleDto(id, _context);
+        }
     }
 }

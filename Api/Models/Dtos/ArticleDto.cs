@@ -3,9 +3,9 @@ using Api.Interfaces;
 
 namespace Api.Models
 {
-    public class ArticleDto
+    public class ArticleDto : IArticleDto
     {
-        private  IUnitOfWork _unitOfWork;
+        private ApiDbContext _context;
         private Article _article;
         public int Id { get; set; }
         public string Title { get; set; }
@@ -14,37 +14,20 @@ namespace Api.Models
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-        private ArticleDto(int ArticleId, IUnitOfWork unitOfWork)
+        public ArticleDto(int ArticleId, ApiDbContext context)
         {
-            _unitOfWork = unitOfWork;
+            _context = context;
             Id = ArticleId;
-        }
-
-        public static async Task<ArticleDto> Create(int ArticleId, IUnitOfWork unitOfWork)
-        {
-            ArticleDto articleDto = new ArticleDto(ArticleId, unitOfWork);
-            Article article = await articleDto.getArticle();
-            if (article != null)
-            {
-                articleDto._article = article;
-                await articleDto.Initialize();
-                return articleDto;
-            }
-            
-            return null;
-        }
-
-        private async Task Initialize()
-        {
+            _article = getArticle();
             assignTitle();
             assignBody();
-            Tags = await assignTags();
-            Comments = await assignComments();
+            assignTags();
+            assignComments();
         }
 
-        private async Task<Article> getArticle()
+        private Article getArticle()
         {
-            return await _unitOfWork.Articles.GetByIdAsync(Id);
+            return _context.Articles.Find(Id);
         }
 
         private void assignTitle()
@@ -57,23 +40,24 @@ namespace Api.Models
             Body = _article.Body;
         }
 
-        private async Task<List<TagDto>> assignTags()
+        private void assignTags()
         {
-            return await Task.Run(() => _unitOfWork.ArticleTags.Find(at => at.ArticleId == Id)
+            Tags = _context.ArticleTags.Where(at => at.ArticleId == Id)
                                        .Select(at => at.Tag)
-                                       .Select(t => new TagDto() { Id = t.Id, Name = t.Name }).ToList());
+                                       .Select(t => new TagDto() { Id = t.Id, Name = t.Name })
+                                       .ToList();
         }
 
-        private async Task<List<CommentDto>> assignComments()
+        private void assignComments()
         {
-            return await Task.Run(() => _unitOfWork.Comments.Find(c => c.Article == _article)
+            Comments = _context.Comments.Where(c => c.Article == _article)
                                                          .Select(c => new CommentDto()
                                                          {
                                                              Id = c.Id,
                                                              Author = c.Author,
                                                              Content = c.Content,
                                                          })
-                                                         .ToList());
+                                                         .ToList();
         }
     }
 }
