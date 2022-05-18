@@ -8,8 +8,8 @@ namespace Api.Models
         private ApiDbContext _context;
         private Article _article;
         public int Id { get; set; }
-        public string Title { get => _article.Title; set => Title = _article.Title; }
-        public string Body { get => _article.Body; set => Body = _article.Body; }
+        public string Title { get; set; }
+        public string Body { get; set; }
 
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
@@ -19,14 +19,27 @@ namespace Api.Models
             _context = context;
             Id = ArticleId;
             _article = getArticle();
-            assignTags();
-            assignComments();
+
+            if (_article != null)
+            {
+                assignTitle();
+                assignBody();
+                assignTags();
+                assignComments();
+            }
+            else
+            {
+                Id = 0;
+            }
         }
 
         private Article getArticle()
         {
             return _context.Articles.Find(Id);
         }
+
+        private void assignTitle() => Title = _article.Title;
+        private void assignBody() => Body = _article.Body;
 
         private void assignTags()
         {
@@ -47,5 +60,7 @@ namespace Api.Models
                                                          })
                                                          .ToList();
         }
+
+        public bool isNull() => Id == 0 ? true : false;
     }
 }

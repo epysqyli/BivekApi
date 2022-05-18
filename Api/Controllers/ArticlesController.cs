@@ -36,7 +36,7 @@ namespace Api.Controllers
         public IActionResult GetArticle(int id)
         {
             IArticleDto article = _unitOfWork.Articles.GetDto(id);
-            return (article == null) ? NotFound() : Ok(article);
+            return (article.isNull()) ? NotFound() : Ok(article);
         }
 
         [HttpPost]
