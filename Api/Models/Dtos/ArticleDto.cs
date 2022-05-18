@@ -8,8 +8,8 @@ namespace Api.Models
         private ApiDbContext _context;
         private Article _article;
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
+        public string Title { get => _article.Title; set => Title = _article.Title; }
+        public string Body { get => _article.Body; set => Body = _article.Body; }
 
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
@@ -19,8 +19,6 @@ namespace Api.Models
             _context = context;
             Id = ArticleId;
             _article = getArticle();
-            assignTitle();
-            assignBody();
             assignTags();
             assignComments();
         }
@@ -28,16 +26,6 @@ namespace Api.Models
         private Article getArticle()
         {
             return _context.Articles.Find(Id);
-        }
-
-        private void assignTitle()
-        {
-            Title = _article.Title;
-        }
-
-        private void assignBody()
-        {
-            Body = _article.Body;
         }
 
         private void assignTags()
