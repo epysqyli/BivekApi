@@ -7,6 +7,9 @@ namespace Api.Models
         public int Id { get; set; }
 
         [Required]
+        public string Title { get; set; }
+
+        [Required]
         public string Link { get; set; }
 
         public DataCategory Category { get; set; }
