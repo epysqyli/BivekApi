@@ -26,7 +26,7 @@ namespace Api
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest user)
         {
             if (ModelState.IsValid)
@@ -71,7 +71,7 @@ namespace Api
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest user)
         {
             if (ModelState.IsValid)
