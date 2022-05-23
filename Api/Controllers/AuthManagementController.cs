@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Api.Models;
 using Api.Configuration;
 
@@ -114,6 +116,14 @@ namespace Api
                 Result = false,
                 Errors = new List<string>() { "Invalid payload" }
             });
+        }
+
+        [HttpGet]
+        [Route("logged_in")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult LoggedIn()
+        {
+            return Ok();
         }
 
         private string GenerateJwtToken(IdentityUser user)
