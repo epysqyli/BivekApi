@@ -51,7 +51,7 @@ string CorsPolicy = "CorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: CorsPolicy,
-                      policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader());
+                      policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials());
 });
 
 var app = builder.Build();

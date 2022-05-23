@@ -1,14 +1,11 @@
 using System;
 using System.Text;
-using System.Linq;
-using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
 using Api.Models;
 using Api.Configuration;
 
@@ -93,11 +90,14 @@ namespace Api
                 {
                     string jwtToken = GenerateJwtToken(existingUser);
 
-                    return Ok(new RegistrationResponse()
+                    Response.Cookies.Append("token", jwtToken, new CookieOptions()
                     {
-                        Result = true,
-                        Token = jwtToken,
+                        Path = "/",
+                        Domain = "localhost",
+                        HttpOnly = true,
                     });
+
+                    return Ok(new RegistrationResponse() { Result = true });
                 }
                 else
                 {
