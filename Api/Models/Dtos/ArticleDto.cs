@@ -14,6 +14,9 @@ namespace Api.Models
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
+        public DateTime? CreatedAt;
+        public DateTime? UpdatedAt;
+
         public ArticleDto(int ArticleId, ApiDbContext context)
         {
             _context = context;
@@ -26,6 +29,7 @@ namespace Api.Models
                 assignBody();
                 assignTags();
                 assignComments();
+                assignTimestamps();
             }
             else
             {
@@ -59,6 +63,12 @@ namespace Api.Models
                                                              Content = c.Content,
                                                          })
                                                          .ToList();
+        }
+
+        private void assignTimestamps()
+        {
+            CreatedAt = _article.CreatedAt;
+            UpdatedAt = _article.UpdatedAt;
         }
 
         public bool isNull() => Id == 0 ? true : false;
