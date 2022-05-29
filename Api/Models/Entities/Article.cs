@@ -14,10 +14,5 @@ namespace Api.Models
 
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ArticleTag> ArticleTags { get; set; }
-
-        public override string ToString()
-        {
-            return $"Title: {this.Title}\nBody: {this.Body}\n";
-        }
     }
 }
