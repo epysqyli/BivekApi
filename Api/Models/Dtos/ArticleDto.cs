@@ -14,8 +14,9 @@ namespace Api.Models
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-        public DateTime? CreatedAt;
-        public DateTime? UpdatedAt;
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool Published { get; set; }
 
         public ArticleDto(int ArticleId, ApiDbContext context)
         {
@@ -69,6 +70,11 @@ namespace Api.Models
         {
             CreatedAt = _article.CreatedAt;
             UpdatedAt = _article.UpdatedAt;
+        }
+
+        private void assignPublishedStatus()
+        {
+            Published = _article.Published;
         }
 
         public bool isNull() => Id == 0 ? true : false;

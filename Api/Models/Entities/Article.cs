@@ -12,6 +12,9 @@ namespace Api.Models
         [Required]
         public string Body { get; set; }
 
+        [Required]
+        public bool Published { get; set; }
+
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ArticleTag> ArticleTags { get; set; }
     }
