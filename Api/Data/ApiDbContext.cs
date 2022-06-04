@@ -63,11 +63,13 @@ namespace Api.Data
                 .HasOne(at => at.Tag)
                 .WithMany(at => at.ArticleTags)
                 .HasForeignKey(at => at.TagId);
-            
+
             builder.Entity<ArticleTag>()
                 .HasOne(at => at.Article)
                 .WithMany(at => at.ArticleTags)
                 .HasForeignKey(at => at.ArticleId);
+
+            builder.Entity<Tag>().HasIndex(t => t.Name).IsUnique(true);
         }
     }
 }
