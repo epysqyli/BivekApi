@@ -16,8 +16,10 @@ namespace Api.UnitTests.Controllers
         public void GetArticle_Returns_NotFound_GivenNoArticle()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
+            Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
+            articleDto.Setup(a => a.isNull()).Returns(true);
             int someArticleId = 1;
-            mockIUnitOfWork.Setup(unit => unit.Articles.GetById(someArticleId)).Returns<IArticleDto>(null);
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(someArticleId)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
             IActionResult res = articlesController.GetArticle(someArticleId);
