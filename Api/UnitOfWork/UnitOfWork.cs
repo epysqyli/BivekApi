@@ -9,12 +9,14 @@ namespace Api.Models
         public IArticleRepository Articles { get; private set; }
         public ICommentRepository Comments { get; private set; }
         public IArticleTagRepository ArticleTags { get; private set; }
+        public ITagRepository Tags { get; private set; }
         public UnitOfWork(ApiDbContext context)
         {
             _context = context;
             Articles = new ArticleRepository(_context);
             Comments = new CommentRepository(_context);
             ArticleTags = new ArticleTagRepository(_context);
+            Tags = new TagRepository(_context);
         }
 
         public int Complete()
