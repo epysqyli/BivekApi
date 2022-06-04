@@ -8,6 +8,16 @@ namespace Api.Models
         public ArticleRepository(ApiDbContext context) : base(context)
         { }
 
+        public IEnumerable<IArticleDto> GetAllDtos()
+        {
+            IEnumerable<int> articleIds = _context.Articles.Select(a => a.Id).ToList();
+            List<IArticleDto> articleDtos = new List<IArticleDto>();
+            foreach (int id in articleIds)
+                articleDtos.Add(GetDto(id));
+
+            return articleDtos;
+        }
+
         public IArticleDto GetDto(int id)
         {
             return new ArticleDto(id, _context);

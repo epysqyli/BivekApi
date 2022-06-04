@@ -21,15 +21,8 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetArticles()
         {
-            IEnumerable<int> articleIds = _unitOfWork.Articles.GetAll().Select(a => a.Id);
-            List<IArticleDto> articles = new List<IArticleDto>();
-            foreach (int id in articleIds)
-            {
-                IArticleDto article = _unitOfWork.Articles.GetDto(id);
-                articles.Add(article);
-            }
-
-            return Ok(articles);
+            IEnumerable<IArticleDto> articleDtos = _unitOfWork.Articles.GetAllDtos();
+            return Ok(articleDtos);
         }
 
         [HttpGet("{id}")]
