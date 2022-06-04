@@ -21,15 +21,15 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetTags()
         {
-            IEnumerable<Tag> tags = _unitOfWork.Tags.GetAll();
-            return Ok(tags);
+            IEnumerable<ITagDto> tagDtos = _unitOfWork.Tags.GetAllDtos();
+            return Ok(tagDtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetTag(int id)
         {
-            Tag tag = _unitOfWork.Tags.GetById(id);
-            return (tag == null) ? NotFound() : Ok(tag);
+            ITagDto tagDto = _unitOfWork.Tags.GetTagDto(id);
+            return (tagDto == null) ? NotFound() : Ok(tagDto);
         }
 
         [HttpPost]
