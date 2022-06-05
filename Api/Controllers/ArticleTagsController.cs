@@ -41,17 +41,17 @@ namespace Api.Controllers
             return BadRequest("Something went wrong");
         }
 
-        [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteArticleTagRelation(ArticleTag articleTag)
-        // {
-        //     ArticleTag existingArticleTag = _unitOfWork.ArticleTags.GetById(id);
-        //     if (existingArticleTag == null)
-        //         return NotFound();
+        [HttpDelete("{articleId}-{tagId}")]
+        public async Task<IActionResult> DeleteArticleTagRelation(int articleId, int tagId)
+        {   
+            ArticleTag articleTag = _unitOfWork.ArticleTags.Find(at => at.TagId == tagId && at.ArticleId == articleId).FirstOrDefault();
+            if (articleTag == null)
+                return NotFound();
 
-        //     _unitOfWork.ArticleTags.Remove(existingArticleTag);
-        //     await _unitOfWork.CompleteAsync();
+            _unitOfWork.ArticleTags.Remove(articleTag);
+            await _unitOfWork.CompleteAsync();
 
-        //     return NoContent();
-        // }
+            return NoContent();
+        }
     }
 }
