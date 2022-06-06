@@ -31,6 +31,7 @@ namespace Api.Models
                 assignTags();
                 assignComments();
                 assignTimestamps();
+                assignPublishedStatus();
             }
             else
             {
