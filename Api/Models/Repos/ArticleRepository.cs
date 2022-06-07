@@ -18,6 +18,16 @@ namespace Api.Models
             return articleDtos;
         }
 
+        public IEnumerable<IArticleDto> GetAllPublishedDtos()
+        {
+            IEnumerable<int> articleIds = _context.Articles.Where(a => a.Published == true).Select(a => a.Id).ToList();
+            List<IArticleDto> articleDtos = new List<IArticleDto>();
+            foreach (int id in articleIds)
+                articleDtos.Add(GetDto(id));
+
+            return articleDtos;
+        }
+
         public IArticleDto GetDto(int id)
         {
             return new ArticleDto(id, _context);

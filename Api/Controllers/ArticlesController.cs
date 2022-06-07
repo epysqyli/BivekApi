@@ -25,6 +25,13 @@ namespace Api.Controllers
             return Ok(articleDtos);
         }
 
+        [HttpGet("published")]
+        public IActionResult GetPublishedArticles()
+        {
+            IEnumerable<IArticleDto> articleDtos = _unitOfWork.Articles.GetAllPublishedDtos();
+            return Ok(articleDtos);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetArticle(int id)
         {
