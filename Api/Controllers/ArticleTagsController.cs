@@ -3,7 +3,6 @@ using Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace Api.Controllers
 {
