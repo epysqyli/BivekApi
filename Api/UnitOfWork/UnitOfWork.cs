@@ -12,6 +12,7 @@ namespace Api.Models
         public ITagRepository Tags { get; private set; }
         public IDatasetRepository Datasets { get; private set; }
         public IDataCategoryRepository DataCategories { get; private set; }
+        public IWorkingPaperRepository WorkingPapers { get; private set; }
         public UnitOfWork(ApiDbContext context)
         {
             _context = context;
@@ -21,6 +22,7 @@ namespace Api.Models
             Tags = new TagRepository(_context);
             Datasets = new DatasetRepository(_context);
             DataCategories = new DataCategoryRepository(_context);
+            WorkingPapers = new WorkingPaperRepository(_context);
         }
 
         public int Complete()
