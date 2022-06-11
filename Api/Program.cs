@@ -19,25 +19,28 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // jwt configuration
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(jwt =>
-{
-    var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]);
-    jwt.SaveToken = true;
-    jwt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        RequireExpirationTime = false,
-        ValidateLifetime = true
-    };
-});
+builder.Services.AddAuthentication(opts => opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(jwtOpts =>
+                    {
+                        var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]);
+                        jwtOpts.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(key),
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            RequireExpirationTime = false,
+                            ValidateLifetime = true
+                        };
+                        jwtOpts.Events = new JwtBearerEvents
+                        {
+                            OnMessageReceived = ctx =>
+                            {
+                                ctx.Token = ctx.Request.Cookies["token"];
+                                return Task.CompletedTask;
+                            }
+                        };
+                    });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApiDbContext>();
@@ -52,13 +55,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: CorsPolicy,
                       policy => policy.WithOrigins("http://localhost:3000")
+                                      .AllowCredentials()
                                       .AllowAnyHeader()
-                                      .AllowAnyMethod()
-                                      .AllowCredentials());
+                                      .AllowAnyMethod());
 });
 
 var app = builder.Build();
-
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Configure the HTTP request pipeline.
@@ -69,11 +71,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-
 app.UseCors(CorsPolicy);
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 // using (var scope = app.Services.CreateScope())

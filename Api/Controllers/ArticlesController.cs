@@ -19,6 +19,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetArticles()
         {
             IEnumerable<IArticleDto> articleDtos = _unitOfWork.Articles.GetAllDtos();
@@ -40,6 +41,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateArticle(Article article)
         {
             if (ModelState.IsValid)
@@ -53,6 +55,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult UpdateArticle(int id, JsonPatchDocument<Article> articlePatch)
         {
             Article article = _unitOfWork.Articles.GetById(id);
@@ -67,6 +70,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteArticle(int id)
         {
             Article existingArticle = _unitOfWork.Articles.GetById(id);
