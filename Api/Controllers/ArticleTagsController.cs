@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
     [ApiController]
     public class ArticleTagsController : ControllerBase
@@ -28,6 +27,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateArticleTagRelation(ArticleTag articleTag)
         {
             if (ModelState.IsValid)
@@ -41,6 +41,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{articleId}-{tagId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteArticleTagRelation(int articleId, int tagId)
         {   
             ArticleTag articleTag = _unitOfWork.ArticleTags.Find(at => at.TagId == tagId && at.ArticleId == articleId).FirstOrDefault();

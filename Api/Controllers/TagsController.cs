@@ -33,6 +33,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateTag(Tag tag)
         {
             if (ModelState.IsValid)
@@ -46,6 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult UpdateTag(int id, JsonPatchDocument<Tag> tagPatch)
         {
             Tag tag = _unitOfWork.Tags.GetById(id);
@@ -60,6 +62,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteTag(int id)
         {
             Tag existingTag = _unitOfWork.Tags.GetById(id);

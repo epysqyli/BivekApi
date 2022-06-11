@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace Api.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
     [ApiController]
     public class ArticlesController : ControllerBase
