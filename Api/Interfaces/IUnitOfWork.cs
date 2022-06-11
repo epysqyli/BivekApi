@@ -7,6 +7,7 @@ namespace Api.Interfaces
         IArticleTagRepository ArticleTags { get; }
         ITagRepository Tags { get; }
         IDatasetRepository Datasets { get; }
+        IDataCategoryRepository DataCategories { get; }
         int Complete();
         Task<int> CompleteAsync();
     }
