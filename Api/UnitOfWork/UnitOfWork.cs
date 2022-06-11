@@ -10,6 +10,7 @@ namespace Api.Models
         public ICommentRepository Comments { get; private set; }
         public IArticleTagRepository ArticleTags { get; private set; }
         public ITagRepository Tags { get; private set; }
+        public IDatasetRepository Datasets { get; private set; }
         public UnitOfWork(ApiDbContext context)
         {
             _context = context;

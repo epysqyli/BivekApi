@@ -9,6 +9,7 @@ namespace Api.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkingPaper> WorkingPapers { get; set; }
+        public DbSet<Dataset> Datasets { get; set; }
         public DbSet<DataCategory> DataCategories { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
