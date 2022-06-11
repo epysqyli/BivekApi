@@ -19,6 +19,8 @@ namespace Api.Models
             Comments = new CommentRepository(_context);
             ArticleTags = new ArticleTagRepository(_context);
             Tags = new TagRepository(_context);
+            Datasets = new DatasetRepository(_context);
+            DataCategories = new DataCategoryRepository(_context);
         }
 
         public int Complete()
