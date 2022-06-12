@@ -2,10 +2,8 @@ using Api.Models;
 
 namespace Api.Interfaces
 {
-    public interface IArticleRepository : IGenericRepository<Article>
+    public interface IArticleRepository : IGenericRepository<Article>, IDtoRepository<IArticleDto>
     {
-        IEnumerable<IArticleDto> GetAllDtos();
         IEnumerable<IArticleDto> GetAllPublishedDtos();
-        IArticleDto GetDto(int id);
     }
 }
