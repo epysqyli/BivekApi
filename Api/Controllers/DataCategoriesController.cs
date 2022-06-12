@@ -20,15 +20,15 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetDataCategories()
         {
-            IEnumerable<DataCategory> dataCategories = _unitOfWork.DataCategories.GetAll();
-            return Ok(dataCategories);
+            IEnumerable<IDataCategoryDto> dataCategoryDtos = _unitOfWork.DataCategories.GetAllDtos();
+            return Ok(dataCategoryDtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetDataCategory(int id)
         {
-            DataCategory dataCategory = _unitOfWork.DataCategories.GetById(id);
-            return (dataCategory == null) ? NotFound() : Ok(dataCategory);
+            IDataCategoryDto dataCategoryDto = _unitOfWork.DataCategories.GetDto(id);
+            return (dataCategoryDto == null) ? NotFound() : Ok(dataCategoryDto);
         }
 
         [HttpPost]
@@ -54,8 +54,8 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.DataCategories.Patch(dataCategory, dataCategoryPatch);
-            DataCategory updatedDataCategory = _unitOfWork.DataCategories.GetById(id);
             _unitOfWork.Complete();
+            DataCategory updatedDataCategory = _unitOfWork.DataCategories.GetById(id);
 
             return CreatedAtAction("UpdateDataCategory", new { dataCategory.Id }, dataCategory);
         }

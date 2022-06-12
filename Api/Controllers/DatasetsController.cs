@@ -20,15 +20,15 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetDatasets()
         {
-            IEnumerable<Dataset> datasets = _unitOfWork.Datasets.GetAll();
+            IEnumerable<IDatasetDto> datasets = _unitOfWork.Datasets.GetAllDtos();
             return Ok(datasets);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetDataset(int id)
         {
-            Dataset dataset = _unitOfWork.Datasets.GetById(id);
-            return (dataset == null) ? NotFound() : Ok(dataset);
+            IDatasetDto datasetDto = _unitOfWork.Datasets.GetDto(id);
+            return (datasetDto == null) ? NotFound() : Ok(datasetDto);
         }
 
         [HttpPost]
