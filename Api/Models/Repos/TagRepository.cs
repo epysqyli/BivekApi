@@ -10,15 +10,10 @@ namespace Api.Models
 
         public IEnumerable<ITagDto> GetAllDtos()
         {
-            IEnumerable<int> tagIds = _context.Tags.Select(t => t.Id).ToList();
-            List<ITagDto> tagDtos = new List<ITagDto>();
-            foreach (int id in tagIds)
-                tagDtos.Add(GetTagDto(id));
-
-            return tagDtos;
+            return _context.Tags.Select(t => t.Id).ToList().Select(id => GetDto(id));
         }
 
-        public ITagDto GetTagDto(int id)
+        public ITagDto GetDto(int id)
         {
             Tag tag = _context.Tags.Find(id);
             if (tag != null)

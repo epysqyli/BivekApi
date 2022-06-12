@@ -28,7 +28,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetTag(int id)
         {
-            ITagDto tagDto = _unitOfWork.Tags.GetTagDto(id);
+            ITagDto tagDto = _unitOfWork.Tags.GetDto(id);
             return (tagDto == null) ? NotFound() : Ok(tagDto);
         }
 
