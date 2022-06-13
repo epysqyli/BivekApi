@@ -23,7 +23,7 @@ namespace Api.Models
                 {
                     Id = dataCategory.Id,
                     Name = dataCategory.Name,
-                    DatasetDtos = GetDatasetDtos(dataCategory.Id),
+                    Datasets = GetDatasetDtos(dataCategory.Id),
                 };
 
             return null;

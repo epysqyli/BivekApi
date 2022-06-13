@@ -6,6 +6,6 @@ namespace Api.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<IDatasetDto> DatasetDtos { get; set; }
+        public IEnumerable<IDatasetDto> Datasets { get; set; }
     }
 }

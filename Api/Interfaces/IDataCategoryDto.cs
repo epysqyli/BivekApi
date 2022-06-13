@@ -4,6 +4,6 @@ namespace Api.Interfaces
     {
         int Id { get; set; }
         string Name { get; set; }
-        IEnumerable<IDatasetDto> DatasetDtos { get; set; }
+        IEnumerable<IDatasetDto> Datasets { get; set; }
     }
 }
