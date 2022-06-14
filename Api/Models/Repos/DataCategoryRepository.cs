@@ -31,16 +31,16 @@ namespace Api.Models
 
         private IEnumerable<IDatasetDto> GetDatasetDtos(int categoryId)
         {
-            IEnumerable<int> datasetIds = _context.Datasets.Include(d => d.Category)
-                                                           .Where(d => d.Category.Id == categoryId)
-                                                           .Select(d => d.Category.Id);
+            IEnumerable<int> datasetIds = _context.Datasets.Include(d => d.DataCategory)
+                                                           .Where(d => d.DataCategory.Id == categoryId)
+                                                           .Select(d => d.DataCategory.Id);
 
             return _context.Datasets.Where(d => datasetIds.Contains(d.Id)).Select(d => new DatasetDto
             {
                 Id = d.Id,
                 Title = d.Title,
                 Link = d.Link,
-                CategoryId = d.Category.Id,
+                CategoryId = d.DataCategory.Id,
             });
         }
     }

@@ -21,14 +21,14 @@ namespace Api.Models
 
         public IDatasetDto GetDto(int id)
         {
-            Dataset dataset = _context.Datasets.Where(d => d.Id == id).Include(d => d.Category).FirstOrDefault();
+            Dataset dataset = _context.Datasets.Where(d => d.Id == id).Include(d => d.DataCategory).FirstOrDefault();
             if (dataset != null)
                 return new DatasetDto
                 {
                     Id = dataset.Id,
                     Title = dataset.Title,
                     Link = dataset.Link,
-                    CategoryId = dataset.Category.Id,
+                    CategoryId = dataset.DataCategory.Id,
                 };
 
             return null;

@@ -124,7 +124,7 @@ namespace Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("DataCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Link")
@@ -137,7 +137,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("DataCategoryId");
 
                     b.ToTable("Datasets");
                 });
@@ -428,11 +428,13 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Dataset", b =>
                 {
-                    b.HasOne("Api.Models.DataCategory", "Category")
+                    b.HasOne("Api.Models.DataCategory", "DataCategory")
                         .WithMany("Datasets")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("DataCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("DataCategory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

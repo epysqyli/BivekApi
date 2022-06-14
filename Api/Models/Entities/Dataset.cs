@@ -12,6 +12,7 @@ namespace Api.Models
         [Required]
         public string Link { get; set; }
 
-        public DataCategory Category { get; set; }
+        public int DataCategoryId { get; set; }
+        public DataCategory DataCategory { get; set; }
     }
 }
