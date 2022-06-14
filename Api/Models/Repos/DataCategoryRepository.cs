@@ -23,24 +23,21 @@ namespace Api.Models
                 {
                     Id = dataCategory.Id,
                     Name = dataCategory.Name,
-                    Datasets = GetDatasetDtos(dataCategory.Id),
+                    Datasets = GetDatasetDtos(id),
                 };
 
             return null;
         }
 
-        private IEnumerable<IDatasetDto> GetDatasetDtos(int categoryId)
+        private IEnumerable<IDatasetDto> GetDatasetDtos(int dataCategoryId)
         {
-            IEnumerable<int> datasetIds = _context.Datasets.Include(d => d.DataCategory)
-                                                           .Where(d => d.DataCategory.Id == categoryId)
-                                                           .Select(d => d.DataCategory.Id);
-
+            IEnumerable<int> datasetIds = _context.Datasets.Where(d => d.DataCategoryId == dataCategoryId).Select(d => d.Id);
             return _context.Datasets.Where(d => datasetIds.Contains(d.Id)).Select(d => new DatasetDto
             {
                 Id = d.Id,
                 Title = d.Title,
                 Link = d.Link,
-                CategoryId = d.DataCategory.Id,
+                CategoryId = d.DataCategoryId,
             });
         }
     }
