@@ -50,7 +50,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Articles", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.ArticleTag", b =>
@@ -71,7 +71,7 @@ namespace Api.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ArticleTags");
+                    b.ToTable("ArticleTags", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Comment", b =>
@@ -96,7 +96,7 @@ namespace Api.Migrations
 
                     b.HasIndex("ArticleId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.DataCategory", b =>
@@ -113,7 +113,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataCategories");
+                    b.ToTable("DataCategories", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Dataset", b =>
@@ -139,7 +139,7 @@ namespace Api.Migrations
 
                     b.HasIndex("DataCategoryId");
 
-                    b.ToTable("Datasets");
+                    b.ToTable("Datasets", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Tag", b =>
@@ -165,7 +165,7 @@ namespace Api.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.WorkingPaper", b =>
@@ -195,7 +195,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkingPapers");
+                    b.ToTable("WorkingPapers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
