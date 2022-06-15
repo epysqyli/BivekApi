@@ -1,3 +1,4 @@
+using Api.Data;
 using System.ComponentModel.DataAnnotations;
 namespace Api.Models
 {
@@ -7,6 +8,7 @@ namespace Api.Models
 
         [Required]
         [MaxLength(500)]
+        [UniqueArticleTitle]
         public string Title { get; set; }
 
         [Required]
@@ -17,5 +19,17 @@ namespace Api.Models
 
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ArticleTag> ArticleTags { get; set; }
+    }
+
+    public class UniqueArticleTitleAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            ApiDbContext context = (ApiDbContext)validationContext.GetService(typeof(ApiDbContext));
+            if (context.Articles.Any(a => a.Title == value.ToString()))
+                return new ValidationResult("Title is not unique");
+
+            return ValidationResult.Success;
+        }
     }
 }
