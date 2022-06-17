@@ -28,7 +28,7 @@ namespace Api.Models
                     Id = dataset.Id,
                     Title = dataset.Title,
                     Link = dataset.Link,
-                    CategoryId = dataset.DataCategory.Id,
+                    dataCategoryId = dataset.DataCategory.Id,
                 };
 
             return null;

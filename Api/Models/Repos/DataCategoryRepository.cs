@@ -37,7 +37,7 @@ namespace Api.Models
                 Id = d.Id,
                 Title = d.Title,
                 Link = d.Link,
-                CategoryId = d.DataCategoryId,
+                dataCategoryId = d.DataCategoryId,
             });
         }
     }
