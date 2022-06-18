@@ -18,7 +18,7 @@ namespace Api.Models
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            ApiDbContext context = (ApiDbContext)validationContext.GetService(typeof(ApiDbContext));
+            ApiDbContext context = validationContext.GetService<ApiDbContext>();
             if (context.Tags.Any(t => t.Name == value.ToString()))
                 return new ValidationResult("Name is not unique");
 

@@ -22,7 +22,7 @@ namespace Api.Models
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            ApiDbContext context = (ApiDbContext)validationContext.GetService(typeof(ApiDbContext));
+            ApiDbContext context = validationContext.GetService<ApiDbContext>();
             if (context.Datasets.Any(d => d.Title == value.ToString()))
                 return new ValidationResult("Title is not unique");
 
