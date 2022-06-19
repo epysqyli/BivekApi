@@ -20,9 +20,7 @@ namespace Api.UnitTests.Models
             Assert.Same("Test Title", article.Title);
         }
 
-        [Fact]
-        // integration test is needed for this case
-        // validation is triggered at runtime
+        [Fact(Skip = "needs integration testing, validation is triggered at runtime")]
         public void ArticleWithDuplicateTitleIsNotCreated()
         {
             DbContextOptions<ApiDbContext> options = new DbContextOptionsBuilder<ApiDbContext>()
