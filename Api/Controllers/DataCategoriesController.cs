@@ -32,7 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateDataCategory(DataCategory dataCategory)
         {
             if (ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteDataCategory(int id)
         {
             DataCategory existingDataCategory = _unitOfWork.DataCategories.GetById(id);
