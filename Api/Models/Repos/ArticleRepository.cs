@@ -10,7 +10,7 @@ namespace Api.Models
 
         public IEnumerable<IArticleDto> GetAllDtos()
         {
-            IEnumerable<int> articleIds = _context.Articles.Select(a => a.Id).ToList();
+            IEnumerable<int> articleIds = _context.Articles.OrderByDescending(a => a.UpdatedAt).Select(a => a.Id).ToList();
             List<IArticleDto> articleDtos = new List<IArticleDto>();
             foreach (int id in articleIds)
                 articleDtos.Add(GetDto(id));
@@ -20,7 +20,9 @@ namespace Api.Models
 
         public IEnumerable<IArticleDto> GetAllPublishedDtos()
         {
-            IEnumerable<int> articleIds = _context.Articles.Where(a => a.Published == true).Select(a => a.Id).ToList();
+            IEnumerable<int> articleIds = _context.Articles.Where(a => a.Published == true)
+                                                           .OrderByDescending(a => a.UpdatedAt)
+                                                           .Select(a => a.Id).ToList();
             List<IArticleDto> articleDtos = new List<IArticleDto>();
             foreach (int id in articleIds)
                 articleDtos.Add(GetDto(id));
