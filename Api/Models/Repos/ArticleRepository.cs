@@ -30,6 +30,11 @@ namespace Api.Models
             return articleDtos;
         }
 
+        public IEnumerable<IArticleDto> GetArticlesByTagId(int id)
+        {
+            return _context.ArticleTags.Where(at => at.TagId == id).ToList().Select(t => GetDto(t.ArticleId));
+        }
+
         public IArticleDto GetDto(int id)
         {
             return new ArticleDto(id, _context);

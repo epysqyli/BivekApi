@@ -19,10 +19,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetArticlesByTagId(int id)
         {
-            IEnumerable<IArticleDto> articleDtos = _unitOfWork.ArticleTags.Find(at => at.TagId == id)
-                                                                          .ToList()
-                                                                          .Select(t => _unitOfWork.Articles.GetDto(t.ArticleId));
-
+            IEnumerable<IArticleDto> articleDtos = _unitOfWork.Articles.GetArticlesByTagId(id);
             return Ok(articleDtos);
         }
 
