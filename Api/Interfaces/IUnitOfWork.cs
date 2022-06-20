@@ -4,7 +4,6 @@ namespace Api.Interfaces
     {
         IArticleRepository Articles { get; }
         ICommentRepository Comments { get; }
-        IArticleTagRepository ArticleTags { get; }
         ITagRepository Tags { get; }
         IDatasetRepository Datasets { get; }
         IDataCategoryRepository DataCategories { get; }

@@ -39,5 +39,19 @@ namespace Api.Models
         {
             return new ArticleDto(id, _context);
         }
+
+        public async Task AddTagToArticle(ArticleTag articleTag)
+        {
+            await _context.ArticleTags.AddAsync(articleTag);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveTagFromArticle(int articleId, int tagId)
+        {
+            ArticleTag articleTag = _context.ArticleTags.Where(at => at.TagId == tagId && at.ArticleId == articleId).FirstOrDefault();
+            _context.ArticleTags.Remove(articleTag);
+            if (articleTag != null)
+                await _context.SaveChangesAsync();
+        }
     }
 }
