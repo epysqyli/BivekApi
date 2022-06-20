@@ -55,7 +55,7 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.Tags.Patch(tag, tagPatch);
-            Article updatedArticle = _unitOfWork.Articles.GetById(id);
+            Tag updatedTag = _unitOfWork.Tags.GetById(id);
             _unitOfWork.Complete();
 
             return CreatedAtAction("UpdateTag", new { tag.Id }, tag);
