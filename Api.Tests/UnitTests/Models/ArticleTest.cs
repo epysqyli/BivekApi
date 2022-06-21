@@ -1,5 +1,5 @@
 using Xunit;
-using Api.Models;
+using Api.Models.Entities;
 using Api.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;

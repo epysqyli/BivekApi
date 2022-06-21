@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Api.Models;
+using Api.Models.Entities;
 using Api.Interfaces;
 using Api.Controllers;
 

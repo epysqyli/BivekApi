@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Threading.Tasks;
 
-using Api.Models;
+using Api.Models.Entities;
 using Api.Interfaces;
 using Api.Controllers;
 
