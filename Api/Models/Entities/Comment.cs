@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models
 {
-    public class Comment
+    public class Comment : BaseEntity
     {
         public int Id { get; set; }
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models
 {
-    public class Dataset
+    public class Dataset : BaseEntity
     {
         public int Id { get; set; }
 
