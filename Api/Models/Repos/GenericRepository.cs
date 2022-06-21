@@ -3,7 +3,7 @@ using Api.Interfaces;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.JsonPatch;
 
-namespace Api.Models
+namespace Api.Models.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

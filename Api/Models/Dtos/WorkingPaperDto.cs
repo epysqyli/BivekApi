@@ -1,6 +1,6 @@
 using Api.Interfaces;
 
-namespace Api.Models
+namespace Api.Models.Dtos
 {
     public class WorkingPaperDto : IWorkingPaperDto
     {

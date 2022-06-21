@@ -1,7 +1,9 @@
 using Api.Data;
 using Api.Interfaces;
+using Api.Models.Entities;
+using Api.Models.Dtos;
 
-namespace Api.Models
+namespace Api.Models.Repositories
 {
     public class TagRepository : GenericRepository<Tag>, ITagRepository
     {

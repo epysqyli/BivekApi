@@ -1,4 +1,4 @@
-using Api.Models;
+using Api.Models.Entities;
 using Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

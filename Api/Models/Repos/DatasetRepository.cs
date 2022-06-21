@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Api.Interfaces;
 using Api.Data;
+using Api.Models.Entities;
+using Api.Models.Dtos;
 
-namespace Api.Models
+namespace Api.Models.Repositories
 {
     public class DatasetRepository : GenericRepository<Dataset>, IDatasetRepository
     {

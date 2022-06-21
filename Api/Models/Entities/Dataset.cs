@@ -1,7 +1,7 @@
 using Api.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models
+namespace Api.Models.Entities
 {
     public class Dataset : BaseEntity
     {

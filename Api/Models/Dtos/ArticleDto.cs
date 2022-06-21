@@ -1,7 +1,8 @@
 using Api.Data;
+using Api.Models.Entities;
 using Api.Interfaces;
 
-namespace Api.Models
+namespace Api.Models.Dtos
 {
     public class ArticleDto : IArticleDto
     {
