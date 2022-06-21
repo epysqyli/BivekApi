@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
@@ -123,6 +122,15 @@ namespace Api
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult LoggedIn()
         {
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("logout")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("token");
             return Ok();
         }
 
