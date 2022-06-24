@@ -15,8 +15,8 @@ namespace Api.Models.Dtos
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-        public string? CreatedAt { get; set; }
-        public string? UpdatedAt { get; set; }
+        public string CreatedAt { get; set; }
+        public string UpdatedAt { get; set; }
         public bool Published { get; set; }
 
         public ArticleDto(int ArticleId, ApiDbContext context)
