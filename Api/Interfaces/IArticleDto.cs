@@ -11,8 +11,8 @@ namespace Api.Interfaces
         List<TagDto> Tags { get; set; }
         List<CommentDto> Comments { get; set; }
 
-        DateTime? CreatedAt { get; set; }
-        DateTime? UpdatedAt { get; set; }
+        string? CreatedAt { get; set; }
+        string? UpdatedAt { get; set; }
         bool Published { get; set; }
         bool isNull();
     }

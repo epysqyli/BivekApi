@@ -15,8 +15,8 @@ namespace Api.Models.Dtos
         public List<TagDto> Tags { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedAt { get; set; }
+        public string? UpdatedAt { get; set; }
         public bool Published { get; set; }
 
         public ArticleDto(int ArticleId, ApiDbContext context)
@@ -70,8 +70,8 @@ namespace Api.Models.Dtos
 
         private void assignTimestamps()
         {
-            CreatedAt = _article.CreatedAt;
-            UpdatedAt = _article.UpdatedAt;
+            CreatedAt = _article.CreatedAt?.ToString("dd MMMM, yyyy");
+            UpdatedAt = _article.UpdatedAt?.ToString("dd MMMM, yyyy");
         }
 
         private void assignPublishedStatus()
