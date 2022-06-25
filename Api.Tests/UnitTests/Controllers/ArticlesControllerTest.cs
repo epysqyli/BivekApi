@@ -31,14 +31,26 @@ namespace Api.UnitTests.Controllers
         public void GetArticle_Returns_OkObjectResult()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-            Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
             Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
+            Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
+            articleDto.SetupAllProperties();
+            articleDto.Object.Id = article.Id;
+            articleDto.Object.Title = article.Title;
+            articleDto.Object.Body = article.Body;
             mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
             IActionResult res = articlesController.GetArticle(article.Id);
 
             Assert.IsType<OkObjectResult>(res);
+            OkObjectResult okResult = (OkObjectResult)res;
+            if (okResult.Value != null)
+            {
+                IArticleDto dtoResult = (IArticleDto)okResult.Value;
+                Assert.Equal(article.Id, dtoResult?.Id);
+                Assert.Equal(article.Title, dtoResult?.Title);
+                Assert.Equal(article.Body, dtoResult?.Body);
+            }
         }
 
         [Fact]
