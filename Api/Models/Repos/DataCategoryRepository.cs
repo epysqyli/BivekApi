@@ -33,7 +33,8 @@ namespace Api.Models.Repositories
 
         private IEnumerable<IDatasetDto> GetDatasetDtos(int dataCategoryId)
         {
-            IEnumerable<int> datasetIds = _context.Datasets.Where(d => d.DataCategoryId == dataCategoryId).Select(d => d.Id);
+            IEnumerable<int> datasetIds = _context.Datasets.Where(d => d.DataCategoryId == dataCategoryId)
+                                                           .OrderByDescending(a => a.Title).Select(d => d.Id);
             return _context.Datasets.Where(d => datasetIds.Contains(d.Id)).Select(d => new DatasetDto
             {
                 Id = d.Id,
