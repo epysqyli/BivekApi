@@ -14,11 +14,7 @@ namespace Api.Models.Repositories
         {
             IEnumerable<int> workingPaperIds = _context.WorkingPapers.OrderByDescending(wp => wp.CreatedAt)
                                                                      .Select(wp => wp.Id).ToList();
-            List<IWorkingPaperDto> workingPaperDtos = new List<IWorkingPaperDto>();
-            foreach (int id in workingPaperIds)
-                workingPaperDtos.Add(GetDto(id));
-
-            return workingPaperDtos;
+            return workingPaperIds.Select((id) => GetDto(id));
         }
 
         public IWorkingPaperDto GetDto(int id)
