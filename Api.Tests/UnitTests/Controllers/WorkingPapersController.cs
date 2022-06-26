@@ -13,7 +13,7 @@ namespace Api.UnitTests.Controllers
     public class WorkingPapersControllerTest
     {
         [Fact]
-        public void GetTag_Returns_NotFound_GivenNoTag()
+        public void GetWorkingPaper_Returns_NotFound_GivenNoWorkingPaper()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             int workingPaperId = 1;
@@ -26,7 +26,7 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetTag_Returns_OkObjectResult()
+        public void GetWorkingPaper_Returns_OkObjectResult()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Moq.Mock<IWorkingPaperDto> workingPaperDto = new Mock<IWorkingPaperDto>();
