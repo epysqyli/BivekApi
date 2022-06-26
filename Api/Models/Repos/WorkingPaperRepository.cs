@@ -12,7 +12,8 @@ namespace Api.Models.Repositories
 
         public IEnumerable<IWorkingPaperDto> GetAllDtos()
         {
-            IEnumerable<int> workingPaperIds = _context.WorkingPapers.Select(wp => wp.Id).ToList();
+            IEnumerable<int> workingPaperIds = _context.WorkingPapers.OrderByDescending(wp => wp.CreatedAt)
+                                                                     .Select(wp => wp.Id).ToList();
             List<IWorkingPaperDto> workingPaperDtos = new List<IWorkingPaperDto>();
             foreach (int id in workingPaperIds)
                 workingPaperDtos.Add(GetDto(id));
@@ -28,7 +29,8 @@ namespace Api.Models.Repositories
                 Id = workingPaper.Id,
                 Title = workingPaper.Title,
                 Abstract = workingPaper.Abstract,
-                Link = workingPaper.Link
+                Link = workingPaper.Link,
+                DatasetLink = workingPaper.DatasetLink
             };
         }
     }

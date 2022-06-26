@@ -6,5 +6,6 @@ namespace Api.Interfaces
         string Title { get; set; }
         string Abstract { get; set; }
         string Link { get; set; }
+        string DatasetLink { get; set; }
     }
 }

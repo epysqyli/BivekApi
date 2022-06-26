@@ -15,6 +15,7 @@ namespace Api.Models.Entities
 
         [Required]
         public string Link { get; set; }
+        public string DatasetLink { get; set; }
     }
 
     public class UniqueWorkingPaperTitleAttribute : ValidationAttribute

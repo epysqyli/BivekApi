@@ -8,5 +8,6 @@ namespace Api.Models.Dtos
         public string Title { get; set; }
         public string Abstract { get; set; }
         public string Link { get; set; }
+        public string DatasetLink { get; set; }
     }
 }
