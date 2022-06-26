@@ -34,7 +34,17 @@ namespace Api.Models.Repositories
 
         public IEnumerable<IArticleDto> GetArticlesByTagId(int id)
         {
-            return _context.ArticleTags.Where(at => at.TagId == id).ToList().Select(t => GetDto(t.ArticleId));
+            return _context.ArticleTags.Where(at => at.TagId == id).ToList()
+                                       .Select(t => GetDto(t.ArticleId))
+                                       .OrderByDescending(a => a.CreatedAt);
+        }
+
+        public IEnumerable<IArticleDto> GetArticlesByTagIds(int[] ids)
+        {
+            return _context.ArticleTags.Where(at => ids.Contains(at.TagId)).ToList()
+                                       .Select(t => GetDto(t.ArticleId))
+                                       .DistinctBy(a => a.Id).Where(a => a.Published)
+                                       .OrderByDescending(a => a.CreatedAt).Take(4);
         }
 
         public IArticleDto GetDto(int id)

@@ -32,6 +32,13 @@ namespace Api.Controllers
             return Ok(articleDtos);
         }
 
+        [HttpGet("tags")]
+        public IActionResult GetArticlesByTagId(int[] ids)
+        {
+            IEnumerable<IArticleDto> articleDtos = _unitOfWork.Articles.GetArticlesByTagIds(ids);
+            return Ok(articleDtos);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetArticle(int id)
         {

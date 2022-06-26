@@ -7,6 +7,7 @@ namespace Api.Interfaces
     {
         IEnumerable<IArticleDto> GetAllPublishedDtos();
         IEnumerable<IArticleDto> GetArticlesByTagId(int id);
+        IEnumerable<IArticleDto> GetArticlesByTagIds(int[] ids);
         Task AddTagToArticle(ArticleTag articleTag);
         Task RemoveTagFromArticle(int articleId, int tagId);
     }
