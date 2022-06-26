@@ -7,5 +7,6 @@ namespace Api.Interfaces
         string Abstract { get; set; }
         string Link { get; set; }
         string DatasetLink { get; set; }
+        string CreatedAt { get; set; }
     }
 }

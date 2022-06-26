@@ -30,7 +30,8 @@ namespace Api.Models.Repositories
                 Title = workingPaper.Title,
                 Abstract = workingPaper.Abstract,
                 Link = workingPaper.Link,
-                DatasetLink = workingPaper.DatasetLink
+                DatasetLink = workingPaper.DatasetLink,
+                CreatedAt = workingPaper.CreatedAt?.ToString("dd MMMM, yyyy")
             };
         }
     }
