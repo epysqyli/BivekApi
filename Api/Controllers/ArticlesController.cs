@@ -55,7 +55,8 @@ namespace Api.Controllers
 
             await _unitOfWork.Articles.AddAsync(article);
             await _unitOfWork.CompleteAsync();
-            return CreatedAtAction("CreateArticle", new { article.Id }, article);
+            IArticleDto articleDto = _unitOfWork.Articles.GetDto(article.Id);
+            return CreatedAtAction("CreateArticle", new { article.Id }, articleDto);
         }
 
         [HttpPatch("{id}")]
