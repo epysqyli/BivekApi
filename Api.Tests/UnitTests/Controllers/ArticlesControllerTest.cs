@@ -3,6 +3,7 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Api.Models.Entities;
 using Api.Interfaces;
@@ -41,15 +42,36 @@ namespace Api.UnitTests.Controllers
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
             IActionResult res = articlesController.GetArticle(article.Id);
+            OkObjectResult okResult = (OkObjectResult)res;
 
             Assert.IsType<OkObjectResult>(res);
-            OkObjectResult okResult = (OkObjectResult)res;
             if (okResult.Value != null)
             {
                 IArticleDto dtoResult = (IArticleDto)okResult.Value;
                 Assert.Equal(article.Id, dtoResult?.Id);
                 Assert.Equal(article.Title, dtoResult?.Title);
                 Assert.Equal(article.Body, dtoResult?.Body);
+            }
+        }
+
+        [Fact]
+        public void GetArticles_Returns_ListOfArticleDtos()
+        {
+            Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
+            mockIUnitOfWork.Setup(unitOfWork => unitOfWork.Articles.GetAllDtos()).Returns(GetArticleDtos());
+            ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
+
+            IActionResult response = articlesController.GetArticles();
+            OkObjectResult okResult = (OkObjectResult)response;
+
+            if (okResult.Value != null)
+            {
+                List<IArticleDto> articleDtos = (List<IArticleDto>)okResult.Value;
+                Assert.Equal(2, articleDtos.Count);
+                Assert.Equal("First article title", articleDtos[0].Title);
+                Assert.Equal("First article body", articleDtos[0].Body);
+                Assert.Equal("Second article title", articleDtos[1].Title);
+                Assert.Equal("Second article body", articleDtos[1].Body);
             }
         }
 
@@ -106,6 +128,27 @@ namespace Api.UnitTests.Controllers
             IActionResult res = await articlesController.DeleteArticle(article.Id);
 
             Assert.IsType<NoContentResult>(res);
+        }
+
+        private List<IArticleDto> GetArticleDtos()
+        {
+            Moq.Mock<IArticleDto> firstArticleDto = new Mock<IArticleDto>();
+            firstArticleDto.SetupAllProperties();
+            firstArticleDto.Object.Id = 1;
+            firstArticleDto.Object.Title = "First article title";
+            firstArticleDto.Object.Body = "First article body";
+
+            Moq.Mock<IArticleDto> secondArticleDto = new Mock<IArticleDto>();
+            secondArticleDto.SetupAllProperties();
+            secondArticleDto.Object.Id = 2;
+            secondArticleDto.Object.Title = "Second article title";
+            secondArticleDto.Object.Body = "Second article body";
+
+            List<IArticleDto> articleDtos = new List<IArticleDto>();
+            articleDtos.Add(firstArticleDto.Object);
+            articleDtos.Add(secondArticleDto.Object);
+
+            return articleDtos;
         }
     }
 }
