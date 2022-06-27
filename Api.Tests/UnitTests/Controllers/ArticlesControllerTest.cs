@@ -34,10 +34,7 @@ namespace Api.UnitTests.Controllers
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
             Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
-            articleDto.SetupAllProperties();
-            articleDto.Object.Id = article.Id;
-            articleDto.Object.Title = article.Title;
-            articleDto.Object.Body = article.Body;
+            SetupArticleDto(articleDto, article.Id, article.Title, article.Body);
             mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
@@ -108,10 +105,7 @@ namespace Api.UnitTests.Controllers
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Article article = new Article() { Title = "Test Title", Body = "Test body" };
             Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
-            articleDto.SetupAllProperties();
-            articleDto.Object.Id = article.Id;
-            articleDto.Object.Title = article.Title;
-            articleDto.Object.Body = article.Body;
+            SetupArticleDto(articleDto, article.Id, article.Title, article.Body);
             mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
@@ -155,19 +149,20 @@ namespace Api.UnitTests.Controllers
             Assert.IsType<NoContentResult>(res);
         }
 
+        private void SetupArticleDto(Mock<IArticleDto> articleDto, int Id, string Title, string Body)
+        {
+            articleDto.SetupAllProperties();
+            articleDto.Object.Id = Id;
+            articleDto.Object.Title = Title;
+            articleDto.Object.Body = Body;
+        }
+
         private List<IArticleDto> GetArticleDtos()
         {
             Moq.Mock<IArticleDto> firstArticleDto = new Mock<IArticleDto>();
-            firstArticleDto.SetupAllProperties();
-            firstArticleDto.Object.Id = 1;
-            firstArticleDto.Object.Title = "First article title";
-            firstArticleDto.Object.Body = "First article body";
-
+            SetupArticleDto(firstArticleDto, 1, "First article title", "First article body");
             Moq.Mock<IArticleDto> secondArticleDto = new Mock<IArticleDto>();
-            secondArticleDto.SetupAllProperties();
-            secondArticleDto.Object.Id = 2;
-            secondArticleDto.Object.Title = "Second article title";
-            secondArticleDto.Object.Body = "Second article body";
+            SetupArticleDto(secondArticleDto, 2, "Second article title", "Second article body");
 
             List<IArticleDto> articleDtos = new List<IArticleDto>();
             articleDtos.Add(firstArticleDto.Object);
