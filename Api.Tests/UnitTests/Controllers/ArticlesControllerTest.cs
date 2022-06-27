@@ -29,7 +29,7 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetArticle_Returns_OkObjectResult()
+        public void GetArticle_Returns_ArticleDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
@@ -38,10 +38,10 @@ namespace Api.UnitTests.Controllers
             mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
-            IActionResult res = articlesController.GetArticle(article.Id);
-            OkObjectResult okResult = (OkObjectResult)res;
+            IActionResult response = articlesController.GetArticle(article.Id);
+            OkObjectResult okResult = (OkObjectResult)response;
 
-            Assert.IsType<OkObjectResult>(res);
+            Assert.IsType<OkObjectResult>(response);
             if (okResult.Value != null)
             {
                 IArticleDto dtoResult = (IArticleDto)okResult.Value;
@@ -81,22 +81,9 @@ namespace Api.UnitTests.Controllers
             articlesController.ModelState.AddModelError("error", "generic error");
 
             Article article = new Article() { Title = null };
-            IActionResult res = await articlesController.CreateArticle(article);
+            IActionResult response = await articlesController.CreateArticle(article);
 
-            Assert.IsType<BadRequestObjectResult>(res);
-        }
-
-        [Fact]
-        public async Task Create_Returns_CreatedAtAction()
-        {
-            Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-            Article article = new Article() { Title = "Test Title", Body = "Test body" };
-            mockIUnitOfWork.Setup(unit => unit.Articles.Add(article));
-            ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
-
-            IActionResult res = await articlesController.CreateArticle(article);
-
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<BadRequestObjectResult>(response);
         }
 
         [Fact]
@@ -110,6 +97,7 @@ namespace Api.UnitTests.Controllers
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
             IActionResult response = await articlesController.CreateArticle(article);
+            Assert.IsType<CreatedAtActionResult>(response);
             CreatedAtActionResult result = (CreatedAtActionResult)response;
 
             if (result.Value != null)
@@ -151,9 +139,9 @@ namespace Api.UnitTests.Controllers
             mockIUnitOfWork.Setup(unit => unit.Articles.GetById(article.Id)).Returns(article);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
 
-            IActionResult res = await articlesController.DeleteArticle(article.Id);
+            IActionResult response = await articlesController.DeleteArticle(article.Id);
 
-            Assert.IsType<NoContentResult>(res);
+            Assert.IsType<NoContentResult>(response);
         }
 
         private void SetupArticleDto(Mock<IArticleDto> articleDto, int Id, string Title, string Body)
