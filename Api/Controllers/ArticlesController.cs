@@ -50,14 +50,12 @@ namespace Api.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateArticle(Article article)
         {
-            if (ModelState.IsValid)
-            {
-                await _unitOfWork.Articles.AddAsync(article);
-                await _unitOfWork.CompleteAsync();
-                return CreatedAtAction("CreateArticle", new { article.Id }, article);
-            }
+            if (!ModelState.IsValid)
+                return BadRequest("Something went wrong");
 
-            return BadRequest("Something went wrong");
+            await _unitOfWork.Articles.AddAsync(article);
+            await _unitOfWork.CompleteAsync();
+            return CreatedAtAction("CreateArticle", new { article.Id }, article);
         }
 
         [HttpPatch("{id}")]
