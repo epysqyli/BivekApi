@@ -122,18 +122,25 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void Update_Returns_CreatedAtAction()
+        public void Update_Returns_ArticleDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-            Article article = new Article() { Id = 1, Title = "Test Title", Body = "Test body" };
+            Article article = new Article() { Id = 1, Title = "Test Title", Body = "Test Body" };
             mockIUnitOfWork.Setup(unit => unit.Articles.GetById(article.Id)).Returns(article);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
             JsonPatchDocument<Article> articlePatch = new JsonPatchDocument<Article>();
             articlePatch.Replace(a => a.Title, "Edited Title");
 
-            IActionResult res = articlesController.UpdateArticle(1, articlePatch);
+            IActionResult response = articlesController.UpdateArticle(1, articlePatch);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            if (result.Value != null)
+            {
+                IArticleDto dtoResult = (IArticleDto)result.Value;
+                Assert.Equal(article.Id, dtoResult.Id);
+                Assert.Equal("Edited Title", dtoResult.Title);
+            }
         }
 
         [Fact]

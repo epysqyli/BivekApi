@@ -70,8 +70,9 @@ namespace Api.Controllers
             _unitOfWork.Articles.Patch(article, articlePatch);
             Article updatedArticle = _unitOfWork.Articles.GetById(id);
             _unitOfWork.Complete();
+            IArticleDto articleDto = _unitOfWork.Articles.GetDto(id);
 
-            return CreatedAtAction("UpdateArticle", new { article.Id }, article);
+            return CreatedAtAction("UpdateArticle", new { article.Id }, articleDto);
         }
 
         [HttpDelete("{id}")]
