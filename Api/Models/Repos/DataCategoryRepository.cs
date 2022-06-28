@@ -20,15 +20,15 @@ namespace Api.Models.Repositories
         public IDataCategoryDto GetDto(int id)
         {
             DataCategory dataCategory = _context.DataCategories.Find(id);
-            if (dataCategory != null)
-                return new DataCategoryDto
-                {
-                    Id = dataCategory.Id,
-                    Name = dataCategory.Name,
-                    Datasets = GetDatasetDtos(id),
-                };
-
-            return null;
+            if (dataCategory == null)
+                return null;
+            
+            return new DataCategoryDto
+            {
+                Id = dataCategory.Id,
+                Name = dataCategory.Name,
+                Datasets = GetDatasetDtos(id),
+            };
         }
 
         private IEnumerable<IDatasetDto> GetDatasetDtos(int dataCategoryId)

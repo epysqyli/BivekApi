@@ -20,6 +20,9 @@ namespace Api.Models.Repositories
         public IWorkingPaperDto GetDto(int id)
         {
             WorkingPaper workingPaper = _context.WorkingPapers.Where(wp => wp.Id == id).FirstOrDefault();
+            if (workingPaper == null)
+                return null;
+
             return new WorkingPaperDto()
             {
                 Id = workingPaper.Id,

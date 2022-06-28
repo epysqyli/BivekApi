@@ -18,10 +18,10 @@ namespace Api.Models.Repositories
         public ITagDto GetDto(int id)
         {
             Tag tag = _context.Tags.Find(id);
-            if (tag != null)
-                return new TagDto { Id = tag.Id, Name = tag.Name };
+            if (tag == null)
+                return null;
 
-            return null;
+            return new TagDto { Id = tag.Id, Name = tag.Name };
         }
     }
 }

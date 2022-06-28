@@ -24,16 +24,16 @@ namespace Api.Models.Repositories
         public IDatasetDto GetDto(int id)
         {
             Dataset dataset = _context.Datasets.Where(d => d.Id == id).Include(d => d.DataCategory).FirstOrDefault();
-            if (dataset != null)
-                return new DatasetDto
-                {
-                    Id = dataset.Id,
-                    Title = dataset.Title,
-                    Link = dataset.Link,
-                    dataCategoryId = dataset.DataCategory.Id,
-                };
+            if (dataset == null)
+                return null;
 
-            return null;
+            return new DatasetDto
+            {
+                Id = dataset.Id,
+                Title = dataset.Title,
+                Link = dataset.Link,
+                dataCategoryId = dataset.DataCategory.Id,
+            };
         }
     }
 }
