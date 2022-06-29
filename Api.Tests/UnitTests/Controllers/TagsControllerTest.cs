@@ -26,17 +26,26 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetTag_Returns_OkObjectResult()
+        public void GetTag_Returns_TagDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Moq.Mock<ITagDto> tagDto = new Mock<ITagDto>();
             Tag tag = new Tag() { Id = 1, Name = "Random Tag" };
+            SetupTagDto(tagDto, tag.Id, tag.Name);
             mockIUnitOfWork.Setup(unit => unit.Tags.GetDto(tag.Id)).Returns(tagDto.Object);
             TagsController tagsController = new TagsController(mockIUnitOfWork.Object);
 
-            IActionResult res = tagsController.GetTag(tag.Id);
+            IActionResult response = tagsController.GetTag(tag.Id);
 
-            Assert.IsType<OkObjectResult>(res);
+            Assert.IsType<OkObjectResult>(response);
+            OkObjectResult okResult = (OkObjectResult)response;
+
+            if (okResult.Value != null)
+            {
+                ITagDto dtoResult = (ITagDto)okResult.Value;
+                Assert.Equal(tag.Id, dtoResult.Id);
+                Assert.Equal(tag.Name, dtoResult.Name);
+            }
         }
 
         [Fact]
@@ -54,20 +63,29 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Create_Returns_CreatedAtAction()
+        public async Task Create_Returns_TagDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Tag tag = new Tag() { Id = 1, Name = "Random Tag" };
+            Moq.Mock<ITagDto> tagDto = new Mock<ITagDto>();
+            SetupTagDto(tagDto, tag.Id, tag.Name);
             mockIUnitOfWork.Setup(unit => unit.Tags.Add(tag));
             TagsController tagsController = new TagsController(mockIUnitOfWork.Object);
 
-            IActionResult res = await tagsController.CreateTag(tag);
+            IActionResult response = await tagsController.CreateTag(tag);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            if (result.Value != null)
+            {
+                ITagDto dtoResult = (ITagDto)result.Value;
+                Assert.Equal(tag.Id, dtoResult.Id);
+                Assert.Equal(tag.Name, dtoResult.Name);
+            }
         }
 
         [Fact]
-        public void Update_Returns_CreatedAtAction()
+        public void Update_Returns_EditedTagDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Tag tag = new Tag() { Id = 1, Name = "Random Tag" };
@@ -76,9 +94,17 @@ namespace Api.UnitTests.Controllers
             JsonPatchDocument<Tag> tagPatch = new JsonPatchDocument<Tag>();
             tagPatch.Replace(t => t.Name, "New Title");
 
-            IActionResult res = tagsController.UpdateTag(1, tagPatch);
+            IActionResult response = tagsController.UpdateTag(tag.Id, tagPatch);
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
+
+            if (result.Value != null)
+            {
+                ITagDto dtoResult = (ITagDto)result.Value;
+                Assert.Equal(tag.Id, dtoResult.Id);
+                Assert.Equal(tag.Name, dtoResult.Name);
+            }
         }
 
         [Fact]
@@ -92,6 +118,13 @@ namespace Api.UnitTests.Controllers
             IActionResult res = await tagsController.DeleteTag(tag.Id);
 
             Assert.IsType<NoContentResult>(res);
+        }
+
+        private void SetupTagDto(Mock<ITagDto> tagDto, int Id, string Name)
+        {
+            tagDto.SetupAllProperties();
+            tagDto.Object.Id = Id;
+            tagDto.Object.Name = Name;
         }
     }
 }

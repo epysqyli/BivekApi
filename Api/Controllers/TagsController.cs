@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace Api.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
     [ApiController]
     public class TagsController : ControllerBase
@@ -40,7 +39,8 @@ namespace Api.Controllers
             {
                 await _unitOfWork.Tags.AddAsync(tag);
                 await _unitOfWork.CompleteAsync();
-                return CreatedAtAction("CreateTag", new { tag.Id }, tag);
+                ITagDto tagDto = _unitOfWork.Tags.GetDto(tag.Id);
+                return CreatedAtAction("CreateTag", new { tag.Id }, tagDto);
             }
 
             return BadRequest("Something went wrong");
@@ -55,10 +55,10 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.Tags.Patch(tag, tagPatch);
-            Tag updatedTag = _unitOfWork.Tags.GetById(id);
             _unitOfWork.Complete();
+            ITagDto tagDto = _unitOfWork.Tags.GetDto(tag.Id);
 
-            return CreatedAtAction("UpdateTag", new { tag.Id }, tag);
+            return CreatedAtAction("UpdateTag", new { tag.Id }, tagDto);
         }
 
         [HttpDelete("{id}")]
