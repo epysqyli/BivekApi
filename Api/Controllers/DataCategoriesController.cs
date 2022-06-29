@@ -39,7 +39,8 @@ namespace Api.Controllers
             {
                 await _unitOfWork.DataCategories.AddAsync(dataCategory);
                 await _unitOfWork.CompleteAsync();
-                return CreatedAtAction("CreateDataCategory", new { dataCategory.Id }, dataCategory);
+                IDataCategoryDto dataCategoryDto = _unitOfWork.DataCategories.GetDto(dataCategory.Id);
+                return CreatedAtAction("CreateDataCategory", new { dataCategory.Id }, dataCategoryDto);
             }
 
             return BadRequest("Something went wrong");
@@ -55,9 +56,9 @@ namespace Api.Controllers
 
             _unitOfWork.DataCategories.Patch(dataCategory, dataCategoryPatch);
             _unitOfWork.Complete();
-            DataCategory updatedDataCategory = _unitOfWork.DataCategories.GetById(id);
+            IDataCategoryDto dataCategoryDto = _unitOfWork.DataCategories.GetDto(id);
 
-            return CreatedAtAction("UpdateDataCategory", new { dataCategory.Id }, dataCategory);
+            return CreatedAtAction("UpdateDataCategory", new { dataCategory.Id }, dataCategoryDto);
         }
 
         [HttpDelete("{id}")]
