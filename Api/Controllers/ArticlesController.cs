@@ -68,7 +68,6 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.Articles.Patch(article, articlePatch);
-            Article updatedArticle = _unitOfWork.Articles.GetById(id);
             _unitOfWork.Complete();
             IArticleDto articleDto = _unitOfWork.Articles.GetDto(id);
 

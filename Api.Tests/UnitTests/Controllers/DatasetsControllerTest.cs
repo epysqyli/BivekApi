@@ -92,9 +92,12 @@ namespace Api.UnitTests.Controllers
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Dataset dataset = new Dataset() { Id = 1, Title = "Test Title", Link = "Some link", DataCategoryId = 1 };
+            string titlePatch = "Edited Title";
+            JsonPatchDocument<Dataset> datasetPatch = new JsonPatchDocument<Dataset>().Replace(a => a.Title, titlePatch);
+            Moq.Mock<IDatasetDto> datasetDto = new Mock<IDatasetDto>();
+            SetupDatasetDto(datasetDto, dataset.Id, titlePatch, dataset.Link, dataset.DataCategoryId);
             mockIUnitOfWork.Setup(unit => unit.Datasets.GetById(dataset.Id)).Returns(dataset);
-            JsonPatchDocument<Dataset> datasetPatch = new JsonPatchDocument<Dataset>();
-            datasetPatch.Replace(a => a.Title, "Edited Title");
+            mockIUnitOfWork.Setup(unit => unit.Datasets.GetDto(dataset.Id)).Returns(datasetDto.Object);
             DatasetsController datasetsController = new DatasetsController(mockIUnitOfWork.Object);
 
             IActionResult response = datasetsController.UpdateDataset(dataset.Id, datasetPatch);
@@ -105,7 +108,7 @@ namespace Api.UnitTests.Controllers
             {
                 IDatasetDto dtoResult = (IDatasetDto)result.Value;
                 Assert.Equal(dataset.Id, dtoResult.Id);
-                Assert.Equal("Edited Title", dtoResult.Title);
+                Assert.Equal(titlePatch, dtoResult.Title);
             }
         }
 

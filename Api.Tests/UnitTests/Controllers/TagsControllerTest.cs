@@ -70,6 +70,7 @@ namespace Api.UnitTests.Controllers
             Moq.Mock<ITagDto> tagDto = new Mock<ITagDto>();
             SetupTagDto(tagDto, tag.Id, tag.Name);
             mockIUnitOfWork.Setup(unit => unit.Tags.Add(tag));
+            mockIUnitOfWork.Setup(unit => unit.Tags.GetDto(tag.Id)).Returns(tagDto.Object);
             TagsController tagsController = new TagsController(mockIUnitOfWork.Object);
 
             IActionResult response = await tagsController.CreateTag(tag);
@@ -89,21 +90,23 @@ namespace Api.UnitTests.Controllers
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Tag tag = new Tag() { Id = 1, Name = "Random Tag" };
+            string titlePatch = "Edited Title";
+            JsonPatchDocument<Tag> tagPatch = new JsonPatchDocument<Tag>().Replace(t => t.Name, titlePatch);
+            Moq.Mock<ITagDto> tagDto = new Mock<ITagDto>();
+            SetupTagDto(tagDto, tag.Id, titlePatch);
             mockIUnitOfWork.Setup(unit => unit.Tags.GetById(tag.Id)).Returns(tag);
+            mockIUnitOfWork.Setup(unit => unit.Tags.GetDto(tag.Id)).Returns(tagDto.Object);
             TagsController tagsController = new TagsController(mockIUnitOfWork.Object);
-            JsonPatchDocument<Tag> tagPatch = new JsonPatchDocument<Tag>();
-            tagPatch.Replace(t => t.Name, "New Title");
 
             IActionResult response = tagsController.UpdateTag(tag.Id, tagPatch);
-
-            Assert.IsType<CreatedAtActionResult>(response);
             CreatedAtActionResult result = (CreatedAtActionResult)response;
 
+            Assert.IsType<CreatedAtActionResult>(response);
             if (result.Value != null)
             {
                 ITagDto dtoResult = (ITagDto)result.Value;
                 Assert.Equal(tag.Id, dtoResult.Id);
-                Assert.Equal(tag.Name, dtoResult.Name);
+                Assert.Equal(titlePatch, dtoResult.Name);
             }
         }
 

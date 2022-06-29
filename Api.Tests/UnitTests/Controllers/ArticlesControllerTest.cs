@@ -114,12 +114,15 @@ namespace Api.UnitTests.Controllers
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Article article = new Article() { Id = 1, Title = "Test Title", Body = "Test Body" };
+            string titlePatch = "Edited Title";
+            JsonPatchDocument<Article> articlePatch = new JsonPatchDocument<Article>().Replace(a => a.Title, titlePatch);
+            Moq.Mock<IArticleDto> articleDto = new Mock<IArticleDto>();
+            SetupArticleDto(articleDto, article.Id, titlePatch, article.Body);
             mockIUnitOfWork.Setup(unit => unit.Articles.GetById(article.Id)).Returns(article);
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetDto(article.Id)).Returns(articleDto.Object);
             ArticlesController articlesController = new ArticlesController(mockIUnitOfWork.Object);
-            JsonPatchDocument<Article> articlePatch = new JsonPatchDocument<Article>();
-            articlePatch.Replace(a => a.Title, "Edited Title");
 
-            IActionResult response = articlesController.UpdateArticle(1, articlePatch);
+            IActionResult response = articlesController.UpdateArticle(article.Id, articlePatch);
             CreatedAtActionResult result = (CreatedAtActionResult)response;
 
             Assert.IsType<CreatedAtActionResult>(response);
@@ -127,7 +130,7 @@ namespace Api.UnitTests.Controllers
             {
                 IArticleDto dtoResult = (IArticleDto)result.Value;
                 Assert.Equal(article.Id, dtoResult.Id);
-                Assert.Equal("Edited Title", dtoResult.Title);
+                Assert.Equal(titlePatch, dtoResult.Title);
             }
         }
 

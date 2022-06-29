@@ -39,7 +39,8 @@ namespace Api.Controllers
             {
                 await _unitOfWork.WorkingPapers.AddAsync(workingPaper);
                 await _unitOfWork.CompleteAsync();
-                return CreatedAtAction("CreateWorkingPaper", new { workingPaper.Id }, workingPaper);
+                IWorkingPaperDto workingPaperDto = _unitOfWork.WorkingPapers.GetDto(workingPaper.Id);
+                return CreatedAtAction("CreateWorkingPaper", new { workingPaper.Id }, workingPaperDto);
             }
 
             return BadRequest("Something went wrong");

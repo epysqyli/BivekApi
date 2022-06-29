@@ -26,17 +26,33 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetWorkingPaper_Returns_OkObjectResult()
+        public void GetWorkingPaper_Returns_WorkingPaperDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             Moq.Mock<IWorkingPaperDto> workingPaperDto = new Mock<IWorkingPaperDto>();
-            WorkingPaper workingPaper = new WorkingPaper() { Id = 1, Title = "Random Title", Link = "Some link", Abstract = "Some abstract" };
+            WorkingPaper workingPaper = new WorkingPaper()
+            {
+                Id = 1,
+                Title = "Random Title",
+                Link = "Some link",
+                Abstract = "Some abstract"
+            };
+            SetupWorkingPaperDto(workingPaperDto, workingPaper.Id, workingPaper.Title, workingPaper.Link, workingPaper.Abstract);
             mockIUnitOfWork.Setup(unit => unit.WorkingPapers.GetDto(workingPaper.Id)).Returns(workingPaperDto.Object);
             WorkingPapersController workingPapersController = new WorkingPapersController(mockIUnitOfWork.Object);
 
-            IActionResult res = workingPapersController.GetWorkingPaper(workingPaper.Id);
+            IActionResult response = workingPapersController.GetWorkingPaper(workingPaper.Id);
+            OkObjectResult result = (OkObjectResult)response;
 
-            Assert.IsType<OkObjectResult>(res);
+            Assert.IsType<OkObjectResult>(response);
+            if (result.Value != null)
+            {
+                IWorkingPaperDto dtoResult = (IWorkingPaperDto)result.Value;
+                Assert.Equal(workingPaper.Id, dtoResult.Id);
+                Assert.Equal(workingPaper.Title, dtoResult.Title);
+                Assert.Equal(workingPaper.Link, dtoResult.Link);
+                Assert.Equal(workingPaper.Abstract, dtoResult.Abstract);
+            }
         }
 
         [Fact]
@@ -54,16 +70,28 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Create_Returns_CreatedAtAction()
+        public async Task Create_Returns_WorkingPaperDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             WorkingPaper workingPaper = new WorkingPaper() { Id = 1, Title = "Random Title", Link = "Some link", Abstract = "Some abstract" };
+            Moq.Mock<IWorkingPaperDto> workingPaperDto = new Mock<IWorkingPaperDto>();
+            SetupWorkingPaperDto(workingPaperDto, workingPaper.Id, workingPaper.Title, workingPaper.Link, workingPaper.Abstract);
             mockIUnitOfWork.Setup(unit => unit.WorkingPapers.Add(workingPaper));
+            mockIUnitOfWork.Setup(unit => unit.WorkingPapers.GetDto(workingPaper.Id)).Returns(workingPaperDto.Object);
             WorkingPapersController workingPapersController = new WorkingPapersController(mockIUnitOfWork.Object);
 
-            IActionResult res = await workingPapersController.CreateWorkingPaper(workingPaper);
+            IActionResult response = await workingPapersController.CreateWorkingPaper(workingPaper);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            if (result.Value != null)
+            {
+                IWorkingPaperDto dtoResult = (IWorkingPaperDto)result.Value;
+                Assert.Equal(workingPaper.Id, dtoResult.Id);
+                Assert.Equal(workingPaper.Title, dtoResult.Title);
+                Assert.Equal(workingPaper.Link, dtoResult.Link);
+                Assert.Equal(workingPaper.Abstract, dtoResult.Abstract);
+            }
         }
 
         [Fact]
@@ -92,6 +120,15 @@ namespace Api.UnitTests.Controllers
             IActionResult res = await workingPapersController.DeleteWorkingPaper(workingPaper.Id);
 
             Assert.IsType<NoContentResult>(res);
+        }
+
+        private void SetupWorkingPaperDto(Mock<IWorkingPaperDto> workingPaperDto, int Id, string Title, string Link, string Abstract)
+        {
+            workingPaperDto.SetupAllProperties();
+            workingPaperDto.Object.Id = Id;
+            workingPaperDto.Object.Title = Title;
+            workingPaperDto.Object.Link = Link;
+            workingPaperDto.Object.Abstract = Abstract;
         }
     }
 }
