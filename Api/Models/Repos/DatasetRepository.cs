@@ -32,7 +32,7 @@ namespace Api.Models.Repositories
                 Id = dataset.Id,
                 Title = dataset.Title,
                 Link = dataset.Link,
-                dataCategoryId = dataset.DataCategory.Id,
+                DataCategoryId = dataset.DataCategory.Id,
             };
         }
     }

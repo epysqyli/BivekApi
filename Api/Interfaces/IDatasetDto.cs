@@ -5,6 +5,6 @@ namespace Api.Interfaces
         int Id { get; set; }
         string Title { get; set; }
         string Link { get; set; }
-        int dataCategoryId { get; set; }
+        int DataCategoryId { get; set; }
     }
 }

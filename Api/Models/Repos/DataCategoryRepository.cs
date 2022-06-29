@@ -40,7 +40,7 @@ namespace Api.Models.Repositories
                 Id = d.Id,
                 Title = d.Title,
                 Link = d.Link,
-                dataCategoryId = d.DataCategoryId,
+                DataCategoryId = d.DataCategoryId,
             });
         }
     }
