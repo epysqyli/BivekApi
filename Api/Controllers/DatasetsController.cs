@@ -39,7 +39,8 @@ namespace Api.Controllers
             {
                 await _unitOfWork.Datasets.AddAsync(dataset);
                 await _unitOfWork.CompleteAsync();
-                return CreatedAtAction("CreateDataset", new { dataset.Id }, dataset);
+                IDatasetDto datasetDto = _unitOfWork.Datasets.GetDto(dataset.Id);
+                return CreatedAtAction("CreateDataset", new { dataset.Id }, datasetDto);
             }
 
             return BadRequest("Something went wrong");
@@ -54,10 +55,10 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.Datasets.Patch(dataset, datasetPatch);
-            Dataset updatedDataset = _unitOfWork.Datasets.GetById(id);
             _unitOfWork.Complete();
+            IDatasetDto datasetDto = _unitOfWork.Datasets.GetDto(dataset.Id);
 
-            return CreatedAtAction("UpdateDataset", new { dataset.Id }, dataset);
+            return CreatedAtAction("UpdateDataset", new { dataset.Id }, datasetDto);
         }
 
         [HttpDelete("{id}")]
