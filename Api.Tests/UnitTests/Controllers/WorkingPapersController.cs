@@ -95,18 +95,30 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void Update_Returns_CreatedAtAction()
+        public void Update_Returns_EditedWorkingPaperDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             WorkingPaper workingPaper = new WorkingPaper() { Id = 1, Title = "Random Title", Link = "Some link", Abstract = "Some abstract" };
+            string titlePatch = "Edited Title";
+            JsonPatchDocument<WorkingPaper> workingPaperPatch = new JsonPatchDocument<WorkingPaper>().Replace(wp => wp.Title, titlePatch);
+            Moq.Mock<IWorkingPaperDto> workingPaperDto = new Mock<IWorkingPaperDto>();
+            SetupWorkingPaperDto(workingPaperDto, workingPaper.Id, titlePatch, workingPaper.Link, workingPaper.Abstract);
             mockIUnitOfWork.Setup(unit => unit.WorkingPapers.GetById(workingPaper.Id)).Returns(workingPaper);
+            mockIUnitOfWork.Setup(unit => unit.WorkingPapers.GetDto(workingPaper.Id)).Returns(workingPaperDto.Object);
             WorkingPapersController workingPapersController = new WorkingPapersController(mockIUnitOfWork.Object);
-            JsonPatchDocument<WorkingPaper> workingPaperPatch = new JsonPatchDocument<WorkingPaper>();
-            workingPaperPatch.Replace(wp => wp.Title, "New Title");
 
-            IActionResult res = workingPapersController.UpdateWorkingPaper(1, workingPaperPatch);
+            IActionResult response = workingPapersController.UpdateWorkingPaper(workingPaper.Id, workingPaperPatch);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            if (result.Value != null)
+            {
+                IWorkingPaperDto dtoResult = (IWorkingPaperDto)result.Value;
+                Assert.Equal(workingPaper.Id, dtoResult.Id);
+                Assert.Equal(workingPaper.Title, dtoResult.Title);
+                Assert.Equal(workingPaper.Abstract, dtoResult.Abstract);
+                Assert.Equal(workingPaper.Link, dtoResult.Link);
+            }
         }
 
         [Fact]

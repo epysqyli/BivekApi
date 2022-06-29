@@ -55,10 +55,10 @@ namespace Api.Controllers
                 return NotFound();
 
             _unitOfWork.WorkingPapers.Patch(workingPaper, workingPaperPatch);
-            WorkingPaper updatedWorkingPaper = _unitOfWork.WorkingPapers.GetById(id);
             _unitOfWork.Complete();
+            IWorkingPaperDto workingPaperDto = _unitOfWork.WorkingPapers.GetDto(workingPaper.Id);
 
-            return CreatedAtAction("UpdateWorkingPaper", new { workingPaper.Id }, workingPaper);
+            return CreatedAtAction("UpdateWorkingPaper", new { workingPaper.Id }, workingPaperDto);
         }
 
         [HttpDelete("{id}")]
