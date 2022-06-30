@@ -35,12 +35,12 @@ namespace Api.UnitTests.Controllers
             if (result.Value != null)
             {
                 IEnumerable<IArticleDto> dtoResults = (IEnumerable<IArticleDto>)result.Value;
-                Assert.Equal(dtoResults.ElementAt(0).Id, firstArticle.Id);
-                Assert.Equal(dtoResults.ElementAt(0).Title, firstArticle.Title);
-                Assert.Equal(dtoResults.ElementAt(0).Body, firstArticle.Body);
-                Assert.Equal(dtoResults.ElementAt(1).Id, secondArticle.Id);
-                Assert.Equal(dtoResults.ElementAt(1).Title, secondArticle.Title);
-                Assert.Equal(dtoResults.ElementAt(1).Body, secondArticle.Body);
+                Assert.Equal(firstArticle.Id, dtoResults.ElementAt(0).Id);
+                Assert.Equal(firstArticle.Title, dtoResults.ElementAt(0).Title);
+                Assert.Equal(firstArticle.Body, dtoResults.ElementAt(0).Body);
+                Assert.Equal(secondArticle.Id, dtoResults.ElementAt(1).Id);
+                Assert.Equal(secondArticle.Title, dtoResults.ElementAt(1).Title);
+                Assert.Equal(secondArticle.Body, dtoResults.ElementAt(1).Body);
             }
         }
 

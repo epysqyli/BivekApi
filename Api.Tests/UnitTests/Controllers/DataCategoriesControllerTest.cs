@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 using Api.Models.Entities;
 using Api.Models.Dtos;
@@ -44,8 +45,10 @@ namespace Api.UnitTests.Controllers
             if (result.Value != null)
             {
                 IDataCategoryDto dtoResult = (IDataCategoryDto)result.Value;
-                Assert.Equal(dataCategory.Id, dtoResult.Id);
-                Assert.Equal(dataCategory.Name, dtoResult.Name);
+                Assert.Equal(dtoResult.Id, dataCategory.Id);
+                Assert.Equal(dtoResult.Name, dataCategory.Name);
+                Assert.Equal(dataCategory.Datasets.Count, dtoResult.Datasets.Count());
+                Assert.Equal(dataCategory.Datasets.ElementAt(0).Id, dtoResult.Datasets.ElementAt(0).Id);
             }
         }
 
@@ -81,8 +84,10 @@ namespace Api.UnitTests.Controllers
             if (result.Value != null)
             {
                 IDataCategoryDto dtoResult = (IDataCategoryDto)result.Value;
-                Assert.Equal(dataCategory.Id, dtoResult.Id);
-                Assert.Equal(dataCategory.Name, dtoResult.Name);
+                Assert.Equal(dtoResult.Id, dataCategory.Id);
+                Assert.Equal(dtoResult.Name, dataCategory.Name);
+                Assert.Equal(dataCategory.Datasets.Count, dtoResult.Datasets.Count());
+                Assert.Equal(dataCategory.Datasets.ElementAt(0).Id, dtoResult.Datasets.ElementAt(0).Id);
             }
         }
 
