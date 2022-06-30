@@ -3,8 +3,10 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 using Api.Models.Entities;
+using Api.Models.Dtos;
 using Api.Interfaces;
 using Api.Controllers;
 
@@ -13,19 +15,33 @@ namespace Api.UnitTests.Controllers
     public class ArticleTagsControllerTest
     {
         [Fact]
-        public void GetArticle_Returns_OkObjectResult()
+        public void GetArticlesByTagId_Returns_ArticleDtos()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
-            Article article = new Article() { Id = 1, Title = "Some Title", Body = "Some body" };
-            Tag tag = new Tag() { Id = 1, Name = "tag" };
-            ArticleTag articleTag = new ArticleTag() { ArticleId = article.Id, TagId = tag.Id };
-            List<IArticleDto> articleDtos = new List<IArticleDto>();
-            mockIUnitOfWork.Setup(unit => unit.Articles.GetArticlesByTagId(tag.Id)).Returns(articleDtos);
+            Article firstArticle = new Article() { Id = 1, Title = "First Title", Body = "First Body", ArticleTags = GetArticleTags(1) };
+            Article secondArticle = new Article() { Id = 2, Title = "Second Title", Body = "Second Body", ArticleTags = GetArticleTags(1) };
+            Tag tag = new Tag() { Id = 1, Name = "First Tag" };
+            Moq.Mock<IArticleDto> firstArticleDto = new Mock<IArticleDto>();
+            Moq.Mock<IArticleDto> secondArticleDto = new Mock<IArticleDto>();
+            List<Mock<IArticleDto>> articleDtos = new List<Mock<IArticleDto>>() { firstArticleDto, secondArticleDto };
+            SetupArticleDtos(articleDtos, firstArticle, secondArticle, GetArticleTagDtos());
+            mockIUnitOfWork.Setup(unit => unit.Articles.GetArticlesByTagId(tag.Id)).Returns(articleDtos.Select(a => a.Object));
             ArticleTagsController articleTagsController = new ArticleTagsController(mockIUnitOfWork.Object);
 
-            IActionResult res = articleTagsController.GetArticlesByTagId(tag.Id);
+            IActionResult response = articleTagsController.GetArticlesByTagId(tag.Id);
+            OkObjectResult result = (OkObjectResult)response;
 
-            Assert.IsType<OkObjectResult>(res);
+            Assert.IsType<OkObjectResult>(response);
+            if (result.Value != null)
+            {
+                IEnumerable<IArticleDto> dtoResults = (IEnumerable<IArticleDto>)result.Value;
+                Assert.Equal(dtoResults.ElementAt(0).Id, firstArticle.Id);
+                Assert.Equal(dtoResults.ElementAt(0).Title, firstArticle.Title);
+                Assert.Equal(dtoResults.ElementAt(0).Body, firstArticle.Body);
+                Assert.Equal(dtoResults.ElementAt(1).Id, secondArticle.Id);
+                Assert.Equal(dtoResults.ElementAt(1).Title, secondArticle.Title);
+                Assert.Equal(dtoResults.ElementAt(1).Body, secondArticle.Body);
+            }
         }
 
         [Fact]
@@ -43,7 +59,7 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Create_Returns_CreatedAtAction()
+        public async Task Create_Returns_ArticleTag()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
             IUnitOfWork mock = mockIUnitOfWork.Object;
@@ -51,9 +67,16 @@ namespace Api.UnitTests.Controllers
             mockIUnitOfWork.Setup(unit => unit.Articles.AddTagToArticle(articleTag));
             ArticleTagsController articleTagsController = new ArticleTagsController(mockIUnitOfWork.Object);
 
-            IActionResult res = await articleTagsController.CreateArticleTagRelation(articleTag);
+            IActionResult response = await articleTagsController.CreateArticleTagRelation(articleTag);
+            CreatedAtActionResult result = (CreatedAtActionResult)response;
 
-            Assert.IsType<CreatedAtActionResult>(res);
+            Assert.IsType<CreatedAtActionResult>(response);
+            if (result.Value != null)
+            {
+                ArticleTag atResult = (ArticleTag)result.Value;
+                Assert.Equal(articleTag.ArticleId, atResult.ArticleId);
+                Assert.Equal(articleTag.TagId, atResult.TagId);
+            }
         }
 
         [Fact]
@@ -67,6 +90,31 @@ namespace Api.UnitTests.Controllers
             IActionResult res = await articleTagsController.DeleteArticleTagRelation(articleTag.ArticleId, articleTag.TagId);
 
             Assert.IsType<NoContentResult>(res);
+        }
+
+        private ICollection<ArticleTag> GetArticleTags(int Id)
+        {
+            return new List<ArticleTag> { new ArticleTag() { ArticleId = Id, TagId = 1 } };
+        }
+
+        private List<TagDto> GetArticleTagDtos()
+        {
+            return new List<TagDto> { new TagDto() { Id = 1, Name = "First Tag" } };
+        }
+
+        private void SetupArticleDtos(List<Mock<IArticleDto>> articleDtos, Article firstArticle, Article secondArticle, List<TagDto> tagDtos)
+        {
+            articleDtos[0].SetupAllProperties();
+            articleDtos[0].Object.Id = firstArticle.Id;
+            articleDtos[0].Object.Title = firstArticle.Title;
+            articleDtos[0].Object.Body = firstArticle.Body;
+            articleDtos[0].Object.Tags = tagDtos;
+
+            articleDtos[1].SetupAllProperties();
+            articleDtos[1].Object.Id = secondArticle.Id;
+            articleDtos[1].Object.Title = secondArticle.Title;
+            articleDtos[1].Object.Body = secondArticle.Body;
+            articleDtos[1].Object.Tags = tagDtos;
         }
     }
 }
