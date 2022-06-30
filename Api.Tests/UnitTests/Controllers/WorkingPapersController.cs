@@ -115,7 +115,7 @@ namespace Api.UnitTests.Controllers
             {
                 IWorkingPaperDto dtoResult = (IWorkingPaperDto)result.Value;
                 Assert.Equal(workingPaper.Id, dtoResult.Id);
-                Assert.Equal(workingPaper.Title, dtoResult.Title);
+                Assert.Equal(titlePatch, dtoResult.Title);
                 Assert.Equal(workingPaper.Abstract, dtoResult.Abstract);
                 Assert.Equal(workingPaper.Link, dtoResult.Link);
             }
