@@ -1,8 +1,7 @@
-using Api.Data;
 using Api.Interfaces;
 using Api.Models.Repositories;
 
-namespace Api.Models
+namespace Api.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
