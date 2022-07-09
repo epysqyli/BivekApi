@@ -17,6 +17,12 @@ namespace Api.Models.Repositories
             return ids.Select(id => GetDto(id));
         }
 
+        public IEnumerable<IDataCategoryDto> GetNonEmptyDtos()
+        {
+            IEnumerable<IDataCategoryDto> allDtos = GetAllDtos();
+            return allDtos.Where(dc => dc.Datasets.Count() != 0).ToList();
+        }
+
         public IDataCategoryDto GetDto(int id)
         {
             DataCategory dataCategory = _context.DataCategories.Find(id);

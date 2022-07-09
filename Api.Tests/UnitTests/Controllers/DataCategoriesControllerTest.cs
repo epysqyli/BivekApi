@@ -29,6 +29,56 @@ namespace Api.UnitTests.Controllers
         }
 
         [Fact]
+        public void GetDataCategories_Returns_AllDataCategoryDto()
+        {
+            Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
+            Moq.Mock<IDataCategoryDto> firstDataCategoryDto = new Mock<IDataCategoryDto>();
+            Moq.Mock<IDataCategoryDto> secondDataCategoryDto = new Mock<IDataCategoryDto>();
+            DataCategory firstDataCategory = new DataCategory() { Id = 1, Name = "First Data Category", Datasets = GetDatasets() };
+            DataCategory secondDataCategory = new DataCategory() { Id = 2, Name = "Second Data Category", Datasets = GetMoreDatasets() };
+            SetupDataCategoryDto(firstDataCategoryDto, firstDataCategory.Id, firstDataCategory.Name, GetDatasetDtos());
+            SetupDataCategoryDto(secondDataCategoryDto, secondDataCategory.Id, secondDataCategory.Name, GetMoreDatasetDtos());
+            IEnumerable<IDataCategoryDto> dtos = new List<IDataCategoryDto>() { firstDataCategoryDto.Object, secondDataCategoryDto.Object };
+            mockIUnitOfWork.Setup(unit => unit.DataCategories.GetAllDtos()).Returns(dtos);
+            DataCategoriesController dataCategoriesController = new DataCategoriesController(mockIUnitOfWork.Object);
+
+            IActionResult response = dataCategoriesController.GetDataCategories();
+            OkObjectResult result = (OkObjectResult)response;
+
+            Assert.IsType<OkObjectResult>(response);
+            if (result.Value != null)
+            {
+                IEnumerable<IDataCategoryDto> dtoResult = (IEnumerable<IDataCategoryDto>)result.Value;
+                Assert.Equal(dtos.Count(), dtoResult.Count());
+            }
+        }
+
+        [Fact]
+        public void GetNonEmptyDataCategories_Returns_NonEmptyDataCategories()
+        {
+            Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
+            Moq.Mock<IDataCategoryDto> firstDataCategoryDto = new Mock<IDataCategoryDto>();
+            Moq.Mock<IDataCategoryDto> secondDataCategoryDto = new Mock<IDataCategoryDto>();
+            DataCategory firstDataCategory = new DataCategory() { Id = 1, Name = "First Data Category", Datasets = GetDatasets() };
+            DataCategory secondDataCategory = new DataCategory() { Id = 2, Name = "Second Data Category", Datasets = GetEmptyDatasets() };
+            SetupDataCategoryDto(firstDataCategoryDto, firstDataCategory.Id, firstDataCategory.Name, GetDatasetDtos());
+            SetupDataCategoryDto(secondDataCategoryDto, secondDataCategory.Id, secondDataCategory.Name, GetEmptyDatasetDtos());
+            mockIUnitOfWork.Setup(unit => unit.DataCategories.GetNonEmptyDtos())
+                                                              .Returns(new List<IDataCategoryDto>() { firstDataCategoryDto.Object });
+            DataCategoriesController dataCategoriesController = new DataCategoriesController(mockIUnitOfWork.Object);
+
+            IActionResult response = dataCategoriesController.GetNonEmptyDataCategories();
+            OkObjectResult result = (OkObjectResult)response;
+
+            Assert.IsType<OkObjectResult>(response);
+            if (result.Value != null)
+            {
+                IEnumerable<IDataCategoryDto> dtoResult = (IEnumerable<IDataCategoryDto>)result.Value;
+                Assert.Equal(1, dtoResult.Count());
+            }
+        }
+
+        [Fact]
         public void GetDataCategory_Returns_DataCategoryDto()
         {
             Moq.Mock<IUnitOfWork> mockIUnitOfWork = new Mock<IUnitOfWork>();
@@ -139,16 +189,48 @@ namespace Api.UnitTests.Controllers
 
         private ICollection<Dataset> GetDatasets()
         {
-            Dataset first = new Dataset() { Id = 1, Title = "First Dataset", Link = "First Link", DataCategoryId = 1 };
-            Dataset second = new Dataset() { Id = 2, Title = "Second Dataset", Link = "Second Link", DataCategoryId = 1 };
-            return new List<Dataset>() { first, second };
+            return new List<Dataset>()
+            {
+                new Dataset() { Id = 1, Title = "First Dataset", Link = "First Link", DataCategoryId = 1 },
+                new Dataset() { Id = 2, Title = "Second Dataset", Link = "Second Link", DataCategoryId = 1 }
+            };
+        }
+
+        private ICollection<Dataset> GetMoreDatasets()
+        {
+            return new List<Dataset>()
+            {
+                new Dataset() { Id = 3, Title = "Third Dataset", Link = "Third Link", DataCategoryId = 2 },
+                new Dataset() { Id = 4, Title = "Fourth Dataset", Link = "Fourth Link", DataCategoryId = 2 }
+            };
         }
 
         private IEnumerable<IDatasetDto> GetDatasetDtos()
         {
-            DatasetDto firstDto = new DatasetDto() { Id = 1, Title = "First Dataset", Link = "First Link", DataCategoryId = 1 };
-            DatasetDto secondTo = new DatasetDto() { Id = 2, Title = "Second Dataset", Link = "Second Link", DataCategoryId = 1 };
-            return new List<DatasetDto>() { firstDto, secondTo };
+            return new List<DatasetDto>()
+            {
+                new DatasetDto() { Id = 1, Title = "First Dataset", Link = "First Link", DataCategoryId = 1 },
+                new DatasetDto() { Id = 2, Title = "Second Dataset", Link = "Second Link", DataCategoryId = 1 }
+            };
+        }
+
+        private IEnumerable<IDatasetDto> GetMoreDatasetDtos()
+        {
+            return new List<DatasetDto>()
+            {
+                new DatasetDto() { Id = 3, Title = "Third Dataset", Link = "Third Link", DataCategoryId = 2 },
+                new DatasetDto() { Id = 4, Title = "Fourth Dataset", Link = "Fourth Link", DataCategoryId = 2 }
+            };
+        }
+
+        private ICollection<Dataset> GetEmptyDatasets()
+        {
+            return new List<Dataset>() { };
+        }
+
+        private IEnumerable<IDatasetDto> GetEmptyDatasetDtos()
+        {
+            return new List<DatasetDto>() { };
         }
     }
 }
