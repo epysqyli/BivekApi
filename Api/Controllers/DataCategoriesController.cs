@@ -20,15 +20,13 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetDataCategories()
         {
-            IEnumerable<IDataCategoryDto> dataCategoryDtos = _unitOfWork.DataCategories.GetAllDtos();
-            return Ok(dataCategoryDtos);
+            return Ok(_unitOfWork.DataCategories.GetAllDtos());
         }
 
         [HttpGet("non-empty")]
         public IActionResult GetNonEmptyDataCategories()
         {
-            IEnumerable<IDataCategoryDto> dataCategoryDtos = _unitOfWork.DataCategories.GetNonEmptyDtos();
-            return Ok(dataCategoryDtos);
+            return Ok(_unitOfWork.DataCategories.GetNonEmptyDtos());
         }
 
         [HttpGet("{id}")]
