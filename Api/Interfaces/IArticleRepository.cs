@@ -1,4 +1,3 @@
-using Api.Models.Dtos;
 using Api.Models.Entities;
 
 namespace Api.Interfaces

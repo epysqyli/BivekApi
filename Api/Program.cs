@@ -1,5 +1,4 @@
 using Api.Data;
-using Api.Models;
 using Api.Interfaces;
 using Api.Configuration;
 

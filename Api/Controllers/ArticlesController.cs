@@ -32,6 +32,13 @@ namespace Api.Controllers
             return Ok(articleDtos);
         }
 
+        [HttpGet("latest")]
+        public IActionResult GetLatestArticle()
+        {
+            IArticleDto articleDto = _unitOfWork.Articles.GetAllPublishedDtos().First();
+            return Ok(articleDto);
+        }
+
         [HttpGet("tags")]
         public IActionResult GetArticlesByTagId(int[] ids)
         {
