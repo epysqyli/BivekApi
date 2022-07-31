@@ -58,7 +58,7 @@ namespace Api.Controllers
         public async Task<IActionResult> CreateArticle(Article article)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Something went wrong");
+                return BadRequest(ModelState);
 
             await _unitOfWork.Articles.AddAsync(article);
             await _unitOfWork.CompleteAsync();
@@ -71,10 +71,13 @@ namespace Api.Controllers
         public IActionResult UpdateArticle(int id, JsonPatchDocument<Article> articlePatch)
         {
             Article article = _unitOfWork.Articles.GetById(id);
-            if (article == null)
-                return NotFound();
+            if (article == null) return NotFound();
 
+            string oldTitle = article.Title;
             _unitOfWork.Articles.Patch(article, articlePatch);
+            if (oldTitle != article.Title)
+                if (!TryValidateModel(article)) return BadRequest(ModelState);
+
             _unitOfWork.Complete();
             IArticleDto articleDto = _unitOfWork.Articles.GetDto(id);
 
