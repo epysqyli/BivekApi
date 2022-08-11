@@ -7,7 +7,6 @@ namespace Api.Data
     {
         private readonly ApiDbContext _context;
         public IArticleRepository Articles { get; private set; }
-        public ICommentRepository Comments { get; private set; }
         public ITagRepository Tags { get; private set; }
         public IDatasetRepository Datasets { get; private set; }
         public IDataCategoryRepository DataCategories { get; private set; }
@@ -16,7 +15,6 @@ namespace Api.Data
         {
             _context = context;
             Articles = new ArticleRepository(_context);
-            Comments = new CommentRepository(_context);
             Tags = new TagRepository(_context);
             Datasets = new DatasetRepository(_context);
             DataCategories = new DataCategoryRepository(_context);

@@ -17,7 +17,6 @@ namespace Api.Models.Entities
         [Required]
         public bool Published { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
         public ICollection<ArticleTag> ArticleTags { get; set; }
     }
 

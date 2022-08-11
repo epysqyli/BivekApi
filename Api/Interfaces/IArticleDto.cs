@@ -7,10 +7,7 @@ namespace Api.Interfaces
         int Id { get; set; }
         string Title { get; set; }
         string Body { get; set; }
-
         List<TagDto> Tags { get; set; }
-        List<CommentDto> Comments { get; set; }
-
         string CreatedAt { get; set; }
         string UpdatedAt { get; set; }
         bool Published { get; set; }

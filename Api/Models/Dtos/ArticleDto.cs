@@ -13,7 +13,6 @@ namespace Api.Models.Dtos
         public string Body { get; set; }
 
         public List<TagDto> Tags { get; set; }
-        public List<CommentDto> Comments { get; set; }
 
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
@@ -30,7 +29,6 @@ namespace Api.Models.Dtos
                 assignTitle();
                 assignBody();
                 assignTags();
-                assignComments();
                 assignTimestamps();
                 assignPublishedStatus();
             }
@@ -54,18 +52,6 @@ namespace Api.Models.Dtos
                                        .Select(at => at.Tag)
                                        .Select(t => new TagDto() { Id = t.Id, Name = t.Name })
                                        .ToList();
-        }
-
-        private void assignComments()
-        {
-            Comments = _context.Comments.Where(c => c.Article == _article)
-                                                         .Select(c => new CommentDto()
-                                                         {
-                                                             Id = c.Id,
-                                                             Author = c.Author,
-                                                             Content = c.Content,
-                                                         })
-                                                         .ToList();
         }
 
         private void assignTimestamps()
