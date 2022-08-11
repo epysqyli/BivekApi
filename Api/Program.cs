@@ -75,9 +75,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-// }
-
 app.Run();
