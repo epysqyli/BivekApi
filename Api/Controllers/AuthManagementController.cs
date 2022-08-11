@@ -96,6 +96,7 @@ namespace Api
                         Path = "/",
                         Domain = "localhost",
                         HttpOnly = true,
+                        Expires = DateTime.UtcNow.AddHours(12)
                     });
 
                     return Ok(new RegistrationResponse() { Result = true });
@@ -148,8 +149,7 @@ namespace Api
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-                Expires = DateTime.UtcNow.AddHours(6),
-
+                Expires = DateTime.UtcNow.AddHours(12),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
