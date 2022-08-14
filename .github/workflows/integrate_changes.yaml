@@ -1,0 +1,39 @@
+name: Integrate changes
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  integrate-changes:
+    name: Integrate changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: rebase feature branch onto main
+        uses: cirrus-actions/rebase@1.7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: setup .NET core sdk 6.0
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0
+
+      - name: install dependencies
+        run: dotnet restore
+
+      - name: test
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: merge feature branch into main
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
