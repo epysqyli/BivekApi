@@ -1,0 +1,24 @@
+name: Create pull request
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  create-pull-request:
+    name: Create pull request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: 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
+          fetch-depth: 0
+
+      - name: create pull request
+        uses: repo-sync/pull-request@v2.6.2
+        with:
+          destination_branch: master
+          github_token: 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
