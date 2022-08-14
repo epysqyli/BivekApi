@@ -2,7 +2,7 @@ name: Integrate changes
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 
 jobs:
   integrate-changes:
@@ -23,7 +23,7 @@ jobs:
       - name: setup .NET core sdk 6.0.3
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.3
+          dotnet-version: 6.0.0
 
       - name: install dependencies
         run: dotnet restore
