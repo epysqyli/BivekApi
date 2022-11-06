@@ -2,7 +2,7 @@
 Description=Blog api
 
 [Service]
-ExecStart=/usr/bin/dotnet /home/elvis/Backend/Api/Release/Api.dll
+ExecStart=/usr/bin/dotnet /home/elvis/BivekApi/Api/Release/Api.dll
 SyslogIdentifier=ApiService
 User=elvis
 Environment=DOTNET_ROOT=/usr/lib/dotnet/dotnet6-6.0.110
