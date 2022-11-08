@@ -64,10 +64,14 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions {
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 app.UseRouting();
