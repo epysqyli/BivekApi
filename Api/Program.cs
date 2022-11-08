@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 string ConnString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(ConnString));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 // jwt configuration
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
