@@ -16,11 +16,13 @@ namespace Api
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtConfig _jwtConfig;
+        private readonly IConfiguration _configuration;
 
-        public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtConfig> optionsMonitor)
+        public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtConfig> optionsMonitor, IConfiguration configuration)
         {
             _userManager = userManager;
             _jwtConfig = optionsMonitor.CurrentValue;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -94,7 +96,7 @@ namespace Api
                     Response.Cookies.Append("token", jwtToken, new CookieOptions()
                     {
                         Path = "/",
-                        Domain = "localhost",
+                        Domain = getDomain(),
                         HttpOnly = true,
                         Expires = DateTime.UtcNow.AddHours(12)
                     });
@@ -158,6 +160,11 @@ namespace Api
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
             return jwtToken;
+        }
+
+        private string getDomain()
+        {
+            return _configuration.GetValue<string>("Domain");
         }
     }
 }
