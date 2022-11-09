@@ -51,11 +51,13 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string domain = builder.Configuration.GetValue<string>("Domain");
+
 string CorsPolicy = "CorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: CorsPolicy,
-                      policy => policy.WithOrigins("http://localhost:3000")
+                      policy => policy.WithOrigins($"http://{domain}:3000")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
