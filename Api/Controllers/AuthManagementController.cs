@@ -133,7 +133,13 @@ namespace Api
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("token");
+            Response.Cookies.Append("token", string.Empty, new CookieOptions()
+            {
+                Path = "/",
+                Domain = getDomain(),
+                HttpOnly = true,
+                Expires = DateTime.UtcNow,
+            });
             return Ok();
         }
 
