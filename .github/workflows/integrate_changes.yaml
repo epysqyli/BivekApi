@@ -13,12 +13,12 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
         with:
-          token: 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
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: rebase feature branch onto master
         uses: cirrus-actions/rebase@1.7
         env:
-          GITHUB_TOKEN: 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
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: setup .NET core sdk 6.0.3
         uses: actions/setup-dotnet@v2
@@ -36,4 +36,4 @@ jobs:
         with:
           type: now
           target_branch: master
-          github_token: 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
+          github_token: ${{ secrets.GITHUB_TOKEN }}

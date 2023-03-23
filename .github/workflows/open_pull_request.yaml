@@ -14,11 +14,11 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
         with:
-          token: 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
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: create pull request
         uses: repo-sync/pull-request@v2.6.2
         with:
           destination_branch: master
-          github_token: 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
+          github_token: ${{ secrets.GITHUB_TOKEN }}
